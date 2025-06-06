@@ -1,54 +1,57 @@
-# React + TypeScript + Vite
+# 📋 TaskFun — Task Management App
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+**TaskFun** adalah aplikasi manajemen tugas modern berbasis web, dibangun dengan **React**, **Vite**, dan **TypeScript**. Aplikasi ini dirancang untuk membantu pengguna mengatur, memantau, dan mengevaluasi tugas-tugas mereka secara efisien dan menyenangkan.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## 🚀 Tech Stack
 
-## Expanding the ESLint configuration
+- ⚛️ **React** – UI Library
+- ⚡ **Vite** – Fast build tool and dev server
+- 🔐 **TypeScript** – Strong typing for scalable code
+- 💨 **Tailwind CSS** – Utility-first CSS framework
+- 📊 **Chart.js / Recharts** – Untuk visualisasi data tugas *(opsional)*
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+---
 
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
-```
+## ✨ Fitur Utama
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+### 🏠 Dashboard
+- Ringkasan statistik tugas
+- Grafik performa dan progres tugas
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+### ✅ Task View
+- 📇 Mode Kartu (Card)
+- 📋 Mode Tabel
+- 📆 Kalender tugas (View per hari/bulan)
 
-export default tseslint.config({
-  plugins: {
-    // Add the react-x and react-dom plugins
-    'react-x': reactX,
-    'react-dom': reactDom,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended typescript rules
-    ...reactX.configs['recommended-typescript'].rules,
-    ...reactDom.configs.recommended.rules,
-  },
-})
-```
+### 📜 History
+- Riwayat tugas yang telah diselesaikan
+
+### ℹ️ About
+- Informasi tentang aplikasi
+
+## 🖼️ Screenshot
+
+### Dashboard
+![Dashboard](public/ss/dashboard.jpg)
+
+### Task View
+![Task View](public/ss/tugas.jpg)
+
+### History View
+![History Task](public/ss/riwayat.png)
+
+
+## 🛠️ Cara Menjalankan
+
+```bash
+# 1. Clone repositori
+git clone https://github.com/raimusthafa/bakery-fe.git
+cd taskfun
+
+# 2. Install dependencies
+npm install
+
+# 3. Jalankan aplikasi
+npm run dev
