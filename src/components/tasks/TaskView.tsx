@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { LayoutGridIcon, ListIcon, CalendarIcon, PlusIcon } from 'lucide-react';
+import { LayoutGridIcon, ListIcon, CalendarIcon } from 'lucide-react';
 import { TaskCard } from './TaskCard';
 import { TaskTable } from './TaskTable';
 import { TaskCalendar } from './TaskCalendar';

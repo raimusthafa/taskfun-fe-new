@@ -1,4 +1,3 @@
-import React from 'react';
 import { InfoIcon, HelpCircleIcon, FileTextIcon, UserIcon, MailIcon } from 'lucide-react';
 export function About() {
   return <div className="space-y-6">

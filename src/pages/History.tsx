@@ -1,4 +1,3 @@
-import React from 'react';
 import { CheckCircleIcon, XCircleIcon, ClockIcon, ArrowRightIcon } from 'lucide-react';
 export function History() {
   const historyItems = [{
