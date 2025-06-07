@@ -60,7 +60,7 @@ const TaskModal: React.FC<TaskModalProps> = ({
       <Form
         form={form}
         layout="vertical"
-        style={{ maxHeight: '60vh', overflowY: 'auto', paddingRight: 12 }}
+        style={{ maxHeight: '60vh', overflowY: 'auto', paddingRight: 12, paddingTop: 3 }}
       >
         <Form.Item
           name="tugas"
@@ -68,14 +68,6 @@ const TaskModal: React.FC<TaskModalProps> = ({
           rules={[{ required: true, message: 'Tugas wajib diisi' }]}
         >
           <Input placeholder="Judul tugas" />
-        </Form.Item>
-
-        <Form.Item
-          name="deskripsi"
-          label="Deskripsi"
-          rules={[{ required: true, message: 'Deskripsi wajib diisi' }]}
-        >
-          <TextArea placeholder="Deskripsikan tugas..." rows={4} />
         </Form.Item>
 
         <Form.Item
@@ -105,7 +97,7 @@ const TaskModal: React.FC<TaskModalProps> = ({
         <Form.Item
           name="tenggat"
           label="Tenggat"
-          rules={[{ required: true, message: 'Tenggat wajib diisi' }]}
+          rules={[{ required: true, message: 'Tenggat wajib diisi', type: 'date' }]}
         >
           <DatePicker style={{ width: '100%' }} />
         </Form.Item>
@@ -126,6 +118,13 @@ const TaskModal: React.FC<TaskModalProps> = ({
               </Option>
             ))}
           </Select>
+        </Form.Item>
+         <Form.Item
+          name="deskripsi"
+          label="Deskripsi"
+          rules={[{ required: true, message: 'Deskripsi wajib diisi' }]}
+        >
+          <TextArea placeholder="Deskripsikan tugas..." rows={4} />
         </Form.Item>
       </Form>
     </Modal>
