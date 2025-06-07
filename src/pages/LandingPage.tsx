@@ -13,9 +13,9 @@ const LandingPage = () => {
           TaskFun
         </div>
         <div style={{ float: 'right' }}>
-          <Link to="/login">
-            <Button type="primary" icon={<LoginOutlined />} size="large">
-              Login
+          <Link to="/">
+            <Button type="primary" size="large">
+              Happy Work
             </Button>
           </Link>
         </div>
@@ -26,7 +26,7 @@ const LandingPage = () => {
         <Paragraph style={{ maxWidth: 600, margin: '0 auto 40px' }}>
           TaskFun adalah aplikasi manajemen tugas yang membantu kamu tetap fokus, teratur, dan produktif setiap hari.
         </Paragraph>
-        <Link to="/login">
+        <Link to="/dashboard">
           <Button type="primary" size="large" icon={<LoginOutlined />}>
             Mulai Sekarang
           </Button>
