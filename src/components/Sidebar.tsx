@@ -1,84 +1,142 @@
+import { useLocation, useNavigate } from 'react-router-dom';
 import {
   LayoutDashboardIcon,
   CheckSquareIcon,
   HistoryIcon,
   InfoIcon,
-  LogOutIcon,
-  XIcon
+  X,
+  PanelLeftClose,
+  Menu as MenuIcon,
 } from 'lucide-react';
-import type { Page } from '../App';
+import { Drawer, Menu, Button, Tooltip } from 'antd';
+import type { MenuProps } from 'antd';
+import { useEffect } from 'react';
 
 interface SidebarProps {
-  currentPage: Page;
-  setCurrentPage: (page: Page) => void;
   isOpen: boolean;
   onClose: () => void;
+  isDesktopOpen: boolean;
+  setIsDesktopOpen: (open: boolean) => void;
 }
 
-export function Sidebar({ currentPage, setCurrentPage, isOpen, onClose }: SidebarProps) {
+export function Sidebar({ isOpen, onClose, isDesktopOpen, setIsDesktopOpen }: SidebarProps) {
+  const location = useLocation();
+  const navigate = useNavigate();
+
   const menuItems = [
-    { id: 'dashboard', label: 'Dashboard', icon: <LayoutDashboardIcon size={20} /> },
-    { id: 'tugas', label: 'Tugas', icon: <CheckSquareIcon size={20} /> },
-    { id: 'history', label: 'Riwayat', icon: <HistoryIcon size={20} /> },
-    { id: 'about', label: 'Tentang', icon: <InfoIcon size={20} /> }
+    { key: '/dashboard', label: 'Dashboard', icon: <LayoutDashboardIcon size={18} /> },
+    { key: '/tugas', label: 'Tugas', icon: <CheckSquareIcon size={18} /> },
+    { key: '/history', label: 'Riwayat', icon: <HistoryIcon size={18} /> },
+    { key: '/about', label: 'Tentang', icon: <InfoIcon size={18} /> }
   ];
+
+  const handleMenuClick: MenuProps['onClick'] = (e) => {
+    navigate(e.key);
+    onClose(); // tutup drawer jika di mobile
+  };
+
+  // Auto-close drawer ketika screen besar
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth >= 768) onClose();
+    };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, [onClose]);
 
   return (
     <>
-      {/* Overlay for mobile */}
-      <div
-        className={`fixed inset-0 bg-black bg-opacity-30 z-30 md:hidden transition-opacity ${
-          isOpen ? 'block' : 'hidden'
-        }`}
-        onClick={onClose}
-      />
-
-      {/* Sidebar */}
-      <div
-        className={`fixed z-40 md:static top-0 left-0 h-full w-64 bg-white border-r border-gray-200 flex flex-col transform transition-transform duration-300 ${
-          isOpen ? 'translate-x-0' : '-translate-x-full'
-        } md:translate-x-0`}
+      {/* Sidebar untuk desktop */}
+      <aside
+        className="hidden md:flex flex-col h-screen bg-white border-r border-gray-200 relative"
+        style={{
+          width: isDesktopOpen ? 256 : 64,
+          transition: 'width 0.5s ease',
+        }}
       >
-        <div className="p-4 border-b border-gray-200 flex justify-between items-center">
-          <h1 className="text-xl font-bold text-blue-600">TaskFun</h1>
-          <button
-            onClick={onClose}
-            className="md:hidden text-gray-600 hover:text-gray-800"
-          >
-            <XIcon size={20} />
-          </button>
+        <div
+          className={`p-4 border-b border-gray-200 flex items-center ${
+            isDesktopOpen ? 'justify-between' : 'justify-center'
+          }`}
+          style={{ transition: 'all 0.5s ease' }}
+        >
+          {isDesktopOpen ? (
+            <h1
+              className="text-xl font-bold text-blue-600"
+              style={{ transition: 'opacity 0.3s ease', opacity: 1 }}
+            >
+              TaskFun
+            </h1>
+          ) : (
+            <Tooltip title="Buka menu">
+              <button
+                onClick={() => setIsDesktopOpen(true)}
+                aria-label="Open sidebar"
+                className="text-blue-600 focus:outline-none z-10"
+                style={{ position: 'relative' }}
+              >
+                <MenuIcon size={24} />
+              </button>
+            </Tooltip>
+          )}
+          {isDesktopOpen && (
+            <Tooltip title="Tutup menu">
+              <button
+                onClick={() => setIsDesktopOpen(false)}
+                aria-label="Close sidebar"
+                className="text-blue-600 focus:outline-none z-10"
+                style={{ position: 'relative' }}
+              >
+                <PanelLeftClose size={24} />
+              </button>
+            </Tooltip>
+          )}
         </div>
+        <Menu
+          mode="inline"
+          selectedKeys={[location.pathname]}
+          onClick={handleMenuClick}
+          items={menuItems}
+          style={{
+            width: '100%',
+            borderRight: 0,
+            ...( !isDesktopOpen ? { textAlign: 'center' } : {} )
+          }}
+          inlineCollapsed={!isDesktopOpen}
+          className={ !isDesktopOpen ? 'collapsed-menu' : '' }
+        />
+      </aside>
 
-        <nav className="flex-1 p-2">
-          <ul className="space-y-1">
-            {menuItems.map((item) => (
-              <li key={item.id}>
-                <button
-                  onClick={() => {
-                    setCurrentPage(item.id as Page);
-                    onClose();
-                  }}
-                  className={`w-full flex items-center px-4 py-3 rounded-lg text-left transition-colors ${
-                    currentPage === item.id
-                      ? 'bg-blue-50 text-blue-600'
-                      : 'text-gray-700 hover:bg-gray-100'
-                  }`}
-                >
-                  <span className="mr-3">{item.icon}</span>
-                  <span className="font-medium">{item.label}</span>
-                </button>
-              </li>
-            ))}
-          </ul>
-        </nav>
-
-        <div className="p-4 border-t border-gray-200">
-          <button className="flex items-center text-gray-600 hover:text-gray-800 w-full px-4 py-2 rounded-lg hover:bg-gray-100">
-            <LogOutIcon size={20} className="mr-3" />
-            <span>Keluar</span>
-          </button>
-        </div>
-      </div>
+      {/* Drawer untuk mobile */}
+      <Drawer
+        title={
+          <div className="flex justify-between items-center text-blue-600 font-bold text-lg">
+            <span>TaskFun</span>
+            <Button
+              type="text"
+              onClick={onClose}
+              aria-label="Close"
+              className="p-0"
+              icon={<X size={18} />}
+            />
+          </div>
+        }
+        placement="left"
+        closeIcon={null}
+        onClose={onClose}
+        open={isOpen}
+        width={250}
+        className="md:hidden"
+        bodyStyle={{ padding: 0, display: 'flex', flexDirection: 'column', height: '100%' }}
+      >
+        <Menu
+          mode="inline"
+          selectedKeys={[location.pathname]}
+          onClick={handleMenuClick}
+          items={menuItems}
+          style={{ flex: 1, borderRight: 0 }}
+        />
+      </Drawer>
     </>
   );
 }

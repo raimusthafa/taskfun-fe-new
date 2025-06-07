@@ -1,5 +1,5 @@
 import React from 'react';
-import { SettingOutlined } from '@ant-design/icons';
+import { SettingOutlined, LogoutOutlined } from '@ant-design/icons';
 import type { MenuProps } from 'antd';
 import { Dropdown, Space } from 'antd';
 import { UserIcon } from 'lucide-react';
@@ -28,6 +28,12 @@ const items: MenuProps['items'] = [
     label: 'Settings',
     icon: <SettingOutlined />,
     extra: '⌘S',
+  },
+  {
+    key: '5',
+    label: 'Logout',
+    icon: <LogoutOutlined />,
+    danger: true,
   },
 ];
 
