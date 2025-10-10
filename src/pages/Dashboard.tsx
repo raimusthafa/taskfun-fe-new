@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import { TaskStats } from '../components/dashboard/TaskStats';
 import { TaskView } from '../components/tasks/TaskView';
 import { Chart2 } from '@/components/ui/chart2';
@@ -28,9 +29,11 @@ export function Dashboard() {
       <div>
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-xl font-semibold text-gray-800">Tugas Terbaru</h2>
-          <button className="text-blue-600 hover:text-blue-800 text-sm">
+          <Link 
+          to="/tugas"
+          className="text-blue-600 hover:text-blue-800 text-sm">
             Lihat Semua
-          </button>
+          </Link>
         </div>
         <TaskView />
       </div>
