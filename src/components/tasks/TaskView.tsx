@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 import { LayoutGridIcon, ListIcon, CalendarIcon } from 'lucide-react';
 import { TaskCard } from './TaskCard';
-import { TaskTable } from './TaskTable';
-import { TaskCalendar } from './TaskCalendar';
+// import { TaskTable } from './TaskTable';
+// import { TaskCalendar } from './TaskCalendar';
 import { Button, message } from 'antd';
 import TaskModal, { type TaskSubmitValues } from '../ModalTask';
 import { PlusOutlined } from '@ant-design/icons';
@@ -14,7 +14,8 @@ export function TaskView() {
   const [viewMode, setViewMode] = useState<'card' | 'table' | 'calendar'>('card');
   const [visible, setVisible] = useState(false);
   
-  const { tasks, loading, fetchTasks, createTask } = useTaskStore();
+  const { loading, fetchTasks, createTask } = useTaskStore();
+  // const { tasks, loading, fetchTasks, createTask } = useTaskStore();
   const { user } = useUserStore();
   const { categories } = useCategoryStore();
 
@@ -46,12 +47,12 @@ export function TaskView() {
     }
   };
 
-  const calendarTasks = tasks.map(task => ({
-    id: task.id,
-    title: task.tugas,
-    date: task.tenggat,
-    priority: task.prioritas
-  }));
+  // const calendarTasks = tasks.map(task => ({
+  //   id: task.id,
+  //   title: task.tugas,
+  //   date: task.tenggat,
+  //   priority: task.prioritas
+  // }));
 
   if (loading) {
     return <div className="flex justify-center items-center h-64">Loading tasks...</div>;
