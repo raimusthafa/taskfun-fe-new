@@ -17,6 +17,19 @@ export function TaskCard() {
     }
   };
 
+    const getPriorityLabel = (priority: string) => {
+    switch (priority) {
+      case 'high':
+        return 'Tinggi';
+      case 'medium':
+        return 'Sedang';
+      case 'low':
+        return 'Rendah';
+      default:
+        return 'Tidak Diketahui';
+    }
+  };
+
   const getStatusIcon = (status: string) => {
     switch (status) {
       case 'done':
@@ -47,7 +60,7 @@ export function TaskCard() {
             <div className="flex items-center justify-between mt-4">
               <div className="flex flex-wrap gap-2">
                 <div className={`text-xs px-2 py-1 rounded ${getPriorityColor(task.prioritas)}`}>
-                  {task.prioritas}
+                  {getPriorityLabel(task.prioritas)}
                 </div>
               </div>
             </div>
