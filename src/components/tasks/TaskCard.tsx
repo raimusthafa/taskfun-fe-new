@@ -19,9 +19,9 @@ export function TaskCard() {
 
   const getStatusIcon = (status: string) => {
     switch (status) {
-      case 'completed':
+      case 'done':
         return <CheckCircleIcon size={16} className="text-green-500" />;
-      case 'in-progress':
+      case 'in_progress':
         return <ClockIcon size={16} className="text-yellow-500" />;
       default:
         return <ClockIcon size={16} className="text-gray-500" />;
