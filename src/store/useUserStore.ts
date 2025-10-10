@@ -1,0 +1,85 @@
+import { create } from 'zustand';
+import api from '../lib/api';
+
+interface User {
+  id_user: string;
+  username: string;
+  fullname: string;
+  email: string;
+  profilepic: string;
+}
+
+interface UserState {
+  user: User | null;
+  token: string | null;
+  loading: boolean;
+  error: string | null;
+  success: string | null;
+  register: (username: string, fullname: string, email: string, password: string) => Promise<void>;
+  login: (identifier: string, password: string) => Promise<void>;
+  logout: () => void;
+  getProfile: () => Promise<void>;
+  setError: (msg: string | null) => void;        // ✅ Tambahkan ini
+  setSuccess: (msg: string | null) => void;      // ✅ Tambahkan ini
+}
+
+export const useUserStore = create<UserState>((set) => ({
+  user: null,
+  token: localStorage.getItem('token'),
+  loading: false,
+  error: null,
+  success: null,
+
+register: async (username, fullname, email, password) => {
+  set({ loading: true, error: null, success: null });
+  try {
+    const response = await api.post('/register', {
+      username,
+      fullname,
+      email,
+      password,
+    });
+
+    // ✅ Jangan set user/token karena backend tidak kirim itu saat register
+    set({
+      loading: false,
+      success: response.data.message || "Yeay! Registrasi berhasil 🎉",
+    });
+  } catch (error: any) {
+    set({
+      loading: false,
+      error: error.response?.data?.error || error.message,
+      success: null,
+    });
+  }
+},
+
+
+  login: async (identifier, password) => {
+    set({ loading: true, error: null, success: null });
+    try {
+      const response = await api.post('/login', { identifier, password });
+      set({ user: response.data.user, token: response.data.token, loading: false, success: response.data.message || "Login successful" });
+      localStorage.setItem('token', response.data.token);
+    } catch (error: any) {
+      set({ error: error.response?.data?.error || error.message, loading: false, success: null });
+    }
+  },
+
+  logout: () => {
+    set({ user: null, token: null });
+    localStorage.removeItem('token');
+  },
+
+  getProfile: async () => {
+    set({ loading: true, error: null });
+    try {
+      const response = await api.get('/me');
+      set({ user: response.data, loading: false });
+    } catch (error: any) {
+      set({ error: error.response?.data?.error || error.message, loading: false });
+    }
+  },
+    setError: (msg) => set({ error: msg }),
+  setSuccess: (msg) => set({ success: msg }),
+}));

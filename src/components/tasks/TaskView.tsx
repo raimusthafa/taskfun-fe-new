@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { LayoutGridIcon, ListIcon, CalendarIcon } from 'lucide-react';
 import { TaskCard } from './TaskCard';
 import { TaskTable } from './TaskTable';
@@ -6,81 +6,56 @@ import { TaskCalendar } from './TaskCalendar';
 import { Button, message } from 'antd';
 import TaskModal, { type TaskFormValues } from '../ModalTask';
 import { PlusOutlined } from '@ant-design/icons';
-
+import { useTaskStore } from '../../store/useTaskStore';
+import { useUserStore } from '../../store/useUserStore';
+import { useCategoryStore } from '../../store/useCategoryStore';
 
 export function TaskView() {
   const [viewMode, setViewMode] = useState<'card' | 'table' | 'calendar'>('card');
-  const tasks = [{
-    id: 1,
-    title: 'Membuat Desain Landing Page',
-    description: 'Membuat mockup untuk halaman landing website baru',
-    dueDate: '2023-08-20',
-    priority: 'high',
-    status: 'in-progress',
-    assignee: 'Andi Pratama',
-    tags: ['Design', 'Website']
-  }, {
-    id: 2,
-    title: 'Mengupdate Database',
-    description: 'Melakukan optimasi dan update pada database pelanggan',
-    dueDate: '2023-08-18',
-    priority: 'medium',
-    status: 'pending',
-    assignee: 'Budi Santoso',
-    tags: ['Database', 'Backend']
-  }, {
-    id: 3,
-    title: 'Testing Aplikasi Mobile',
-    description: 'Melakukan pengujian pada fitur baru aplikasi mobile',
-    dueDate: '2023-08-15',
-    priority: 'low',
-    status: 'completed',
-    assignee: 'Citra Dewi',
-    tags: ['Testing', 'Mobile']
-  }, {
-    id: 4,
-    title: 'Meeting dengan Klien',
-    description: 'Presentasi progress development kepada klien',
-    dueDate: '2023-08-22',
-    priority: 'high',
-    status: 'pending',
-    assignee: 'Deni Cahyadi',
-    tags: ['Meeting', 'Client']
-  }, {
-    id: 5,
-    title: 'Setup Server Baru',
-    description: 'Melakukan konfigurasi pada server produksi yang baru',
-    dueDate: '2023-08-17',
-    priority: 'medium',
-    status: 'in-progress',
-    assignee: 'Eko Prasetyo',
-    tags: ['Server', 'DevOps']
-  }, {
-    id: 6,
-    title: 'Revisi Dokumentasi API',
-    description: 'Memperbarui dokumentasi API sesuai dengan perubahan terbaru',
-    dueDate: '2023-08-16',
-    priority: 'low',
-    status: 'in-progress',
-    assignee: 'Fani Wijaya',
-    tags: ['Documentation', 'API']
-  }] as any[];
+  const [visible, setVisible] = useState(false);
+  
+  const { tasks, loading, fetchTasks, createTask } = useTaskStore();
+  const { user } = useUserStore();
+  const { categories } = useCategoryStore();
+
+  useEffect(() => {
+    fetchTasks();
+  }, [fetchTasks]);
+
+  const handleSubmit = async (values: TaskFormValues) => {
+    try {
+      // Find the selected category ID
+      const selectedCategory = categories.find(cat => cat.category === values.kategori[0]);
+      const categoryId = selectedCategory ? selectedCategory.id_category : 1;
+      
+      const taskData = {
+        tugas: values.tugas,
+        deskripsi: values.deskripsi,
+        prioritas: values.prioritas,
+        tenggat: values.tenggat.format('YYYY-MM-DD'),
+        status: values.status,
+        id_user: user ? parseInt(user.id_user) : 1,
+        id_category: categoryId
+      };
+      
+      await createTask(taskData);
+      message.success('Tugas berhasil ditambahkan!');
+      setVisible(false);
+    } catch (error) {
+      message.error('Gagal menambahkan tugas');
+    }
+  };
+
   const calendarTasks = tasks.map(task => ({
     id: task.id,
-    title: task.title,
-    date: task.dueDate,
-    priority: task.priority
+    title: task.tugas,
+    date: task.tenggat,
+    priority: task.prioritas
   }));
 
-
-  const [visible, setVisible] = useState(false);
-  const categories = ['UI/UX', 'Backend', 'Frontend', 'Dokumentasi'];
-
-  const handleSubmit = (values: TaskFormValues) => {
-    console.log('Tugas baru:', values);
-    message.success('Tugas berhasil ditambahkan!');
-    setVisible(false);
-  };
+  if (loading) {
+    return <div className="flex justify-center items-center h-64">Loading tasks...</div>;
+  }
 
   return <div className="space-y-4">
       <div className="flex justify-between items-center">
@@ -106,13 +81,12 @@ export function TaskView() {
         visible={visible}
         onCancel={() => setVisible(false)}
         onSubmit={handleSubmit}
-        categories={categories}
       />
       </div>
       <div>
-        {viewMode === 'card' && <TaskCard tasks={tasks} />}
-        {viewMode === 'table' && <TaskTable tasks={tasks} />}
-        {viewMode === 'calendar' && <TaskCalendar tasks={calendarTasks} />}
+        {viewMode === 'card' && <TaskCard />}
+        {/* {viewMode === 'table' && <TaskTable tasks={tasks} />}
+        {viewMode === 'calendar' && <TaskCalendar tasks={calendarTasks} />} */}
       </div>
     </div>;
 }

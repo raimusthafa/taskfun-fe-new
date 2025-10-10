@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { Modal, Form, Input, Select, DatePicker } from 'antd';
 import type dayjs from 'dayjs';
+import { useCategoryStore } from '../store/useCategoryStore';
 
 const { TextArea } = Input;
 const { Option } = Select;
@@ -8,25 +9,24 @@ const { Option } = Select;
 export interface TaskFormValues {
   tugas: string;
   deskripsi: string;
-  status: 'todo' | 'in progres' | 'selesai';
+  status: 'todo' | 'in_progres' | 'selesai';
   prioritas: 'low' | 'medium' | 'high';
   tenggat: dayjs.Dayjs;
-  kategori: string[];
+  kategori: string;
 }
 
 interface TaskModalProps {
   visible: boolean;
   onCancel: () => void;
   onSubmit: (values: TaskFormValues) => void;
-  categories: string[];
 }
 
 const TaskModal: React.FC<TaskModalProps> = ({
   visible,
   onCancel,
   onSubmit,
-  categories,
 }) => {
+  const { categories, fetchCategories } = useCategoryStore();
   const [form] = Form.useForm();
 
   const handleOk = () => {
@@ -40,6 +40,11 @@ const TaskModal: React.FC<TaskModalProps> = ({
         console.log('Validation Failed:', info);
       });
   };
+
+  // Fetch categories when component mounts
+  useEffect(() => {
+    fetchCategories();
+  }, [fetchCategories]);
 
   // Reset form saat modal ditutup
   useEffect(() => {
@@ -77,8 +82,8 @@ const TaskModal: React.FC<TaskModalProps> = ({
         >
           <Select placeholder="Pilih status">
             <Option value="todo">Todo</Option>
-            <Option value="in progres">In Progress</Option>
-            <Option value="selesai">Selesai</Option>
+            <Option value="in_progres">In Progress</Option>
+            <Option value="done">Selesai</Option>
           </Select>
         </Form.Item>
 
@@ -108,13 +113,13 @@ const TaskModal: React.FC<TaskModalProps> = ({
           rules={[{ required: true, message: 'Pilih setidaknya satu kategori' }]}
         >
           <Select
-            mode="multiple"
+            
             placeholder="Pilih kategori"
             allowClear
           >
             {categories.map((cat) => (
-              <Option key={cat} value={cat}>
-                {cat}
+              <Option key={cat.id_category} value={cat.category}>
+                {cat.category}
               </Option>
             ))}
           </Select>

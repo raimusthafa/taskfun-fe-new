@@ -25,18 +25,13 @@ import {
 export const description = "A stacked bar chart with a legend"
 
 const chartData = [
-  { month: "January", completed: 186, incomplete: 80 },
-  { month: "February", completed: 305, incomplete: 200 },
-  { month: "March", completed: 237, incomplete: 120 },
-  { month: "April", completed: 73, incomplete: 190 },
-  { month: "May", completed: 209, incomplete: 130 },
-  { month: "June", completed: 214, incomplete: 140 },
-  { month: "July", completed: 190, incomplete: 150 },
-  { month: "August", completed: 220, incomplete: 160 },
-  { month: "September", completed: 180, incomplete: 110 },
-  { month: "October", completed: 250, incomplete: 180 },
-  { month: "November", completed: 210, incomplete: 125 },
-  { month: "December", completed: 280, incomplete: 170 },
+  { month: "Minggu", completed: 186, incomplete: 80 },
+  { month: "Senin", completed: 305, incomplete: 200 },
+  { month: "Selasa", completed: 237, incomplete: 120 },
+  { month: "Rabu", completed: 73, incomplete: 190 },
+  { month: "Kamis", completed: 209, incomplete: 130 },
+  { month: "Jumat", completed: 214, incomplete: 140 },
+  { month: "Sabtu", completed: 24, incomplete: 40 },
 ];
 
 
@@ -55,8 +50,8 @@ export function Chart2() {
   return (
     <Card>
   <CardHeader>
-    <CardTitle>Progress Tugas - Stacked + Legend</CardTitle>
-    <CardDescription>Januari - Desember 2024</CardDescription>
+    <CardTitle className="text-lg">Progress Tugas Minggu Ini</CardTitle>
+    <CardDescription>Minggu 1 - Juni 2025</CardDescription>
   </CardHeader>
   <CardContent>
     <ChartContainer config={chartConfig}>
@@ -88,10 +83,7 @@ export function Chart2() {
   </CardContent>
   <CardFooter className="flex-col items-start gap-2 text-sm">
     <div className="flex gap-2 leading-none font-medium">
-      Produktivitas naik 5.2% bulan ini <TrendingUp className="h-4 w-4" />
-    </div>
-    <div className="text-muted-foreground leading-none">
-      Menampilkan total tugas selama 12 bulan terakhir
+      Produktivitas naik 5.2% Minggu ini <TrendingUp className="h-4 w-4" />
     </div>
   </CardFooter>
 </Card>
