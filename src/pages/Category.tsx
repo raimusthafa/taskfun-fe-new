@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Table, Tooltip, Modal, Input, Button, Space, message, Popconfirm } from 'antd';
-import { EditOutlined, DeleteOutlined, PlusOutlined } from '@ant-design/icons';
+import { EditOutlined, DeleteOutlined, PlusOutlined, CheckCircleTwoTone, CloseCircleOutlined } from '@ant-design/icons';
 import { useCategoryStore } from '../store/useCategoryStore';
 import { useUserStore } from '../store/useUserStore';
 import { showMessage } from '@/lib/masssageHelper';
@@ -18,6 +18,8 @@ const CategoryPage: React.FC = () => {
   const [editingCategory, setEditingCategory] = useState<Category | null>(null);
   const [createFormData, setCreateFormData] = useState({ category: '' });
   const [editFormData, setEditFormData] = useState({ category: '' });
+  const setSuccess = useCategoryStore((state) => state.setSuccess);
+  const setError = useUserStore((state) => state.setError);
 
   useEffect(() => {
     fetchCategories();
@@ -25,13 +27,37 @@ const CategoryPage: React.FC = () => {
 
   useEffect(() => {
     if (error) {
-      message.error(error);
+      const key = 'create_error';
+      message.open({
+        key,
+        type: "error",
+        duration: 4,
+        icon: <CloseCircleOutlined twoToneColor="#52c41a" style={{ fontSize: "20px" }} />,
+        content: (
+          <div className="text-lg">
+            {error}
+          </div>
+        ),
+      });
+      setError(null);
     }
   }, [error]);
 
   useEffect(() => {
-    if (success) {
-      showMessage("success", success);
+   if (success) {
+      const key = 'create_success';
+      message.open({
+        key,
+        type: "success",
+        duration: 4,
+        icon: <CheckCircleTwoTone twoToneColor="#52c41a" style={{ fontSize: "20px" }} />,
+        content: (
+          <div className="text-lg">
+            {success}
+          </div>
+        ),
+      });
+      setSuccess(null);
     }
   }, [success]);
 
