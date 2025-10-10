@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { Modal, Form, Input, Select, DatePicker } from 'antd';
-import type dayjs from 'dayjs';
+import dayjs from 'dayjs';
 import { useCategoryStore } from '../store/useCategoryStore';
 
 const { TextArea } = Input;
@@ -15,10 +15,19 @@ export interface TaskFormValues {
   kategori: string;
 }
 
+export interface TaskSubmitValues {
+  tugas: string;
+  deskripsi: string;
+  status: 'todo' | 'in_progres' | 'selesai';
+  prioritas: 'low' | 'medium' | 'high';
+  tenggat: string;
+  kategori: string;
+}
+
 interface TaskModalProps {
   visible: boolean;
   onCancel: () => void;
-  onSubmit: (values: TaskFormValues) => void;
+  onSubmit: (values: TaskSubmitValues) => void;
 }
 
 const TaskModal: React.FC<TaskModalProps> = ({
@@ -33,7 +42,11 @@ const TaskModal: React.FC<TaskModalProps> = ({
     form
       .validateFields()
       .then((values: TaskFormValues) => {
-        onSubmit(values);
+         const formattedValues = {
+          ...values,
+          tenggat: dayjs(values.tenggat).startOf('day').toISOString() // hasil: "2025-10-11T00:00:00.000Z"
+        };
+        onSubmit(formattedValues);
         form.resetFields(); // reset setelah submit sukses
       })
       .catch((info) => {
@@ -82,7 +95,7 @@ const TaskModal: React.FC<TaskModalProps> = ({
         >
           <Select placeholder="Pilih status">
             <Option value="todo">Todo</Option>
-            <Option value="in_progres">In Progress</Option>
+            <Option value="in_progress">In Progress</Option>
             <Option value="done">Selesai</Option>
           </Select>
         </Form.Item>

@@ -4,7 +4,7 @@ import { TaskCard } from './TaskCard';
 import { TaskTable } from './TaskTable';
 import { TaskCalendar } from './TaskCalendar';
 import { Button, message } from 'antd';
-import TaskModal, { type TaskFormValues } from '../ModalTask';
+import TaskModal, { type TaskSubmitValues } from '../ModalTask';
 import { PlusOutlined } from '@ant-design/icons';
 import { useTaskStore } from '../../store/useTaskStore';
 import { useUserStore } from '../../store/useUserStore';
@@ -22,22 +22,22 @@ export function TaskView() {
     fetchTasks();
   }, [fetchTasks]);
 
-  const handleSubmit = async (values: TaskFormValues) => {
+  const handleSubmit = async (values: TaskSubmitValues) => {
     try {
       // Find the selected category ID
-      const selectedCategory = categories.find(cat => cat.category === values.kategori[0]);
+      const selectedCategory = categories.find(cat => cat.category === values.kategori);
       const categoryId = selectedCategory ? selectedCategory.id_category : 1;
-      
+
       const taskData = {
         tugas: values.tugas,
         deskripsi: values.deskripsi,
         prioritas: values.prioritas,
-        tenggat: values.tenggat.format('YYYY-MM-DD'),
+        tenggat: values.tenggat,
         status: values.status,
         id_user: user ? parseInt(user.id_user) : 1,
         id_category: categoryId
       };
-      
+
       await createTask(taskData);
       message.success('Tugas berhasil ditambahkan!');
       setVisible(false);
