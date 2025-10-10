@@ -94,8 +94,8 @@ const TaskModal: React.FC<TaskModalProps> = ({
           rules={[{ required: true, message: 'Pilih status' }]}
         >
           <Select placeholder="Pilih status">
-            <Option value="todo">Todo</Option>
-            <Option value="in_progress">In Progress</Option>
+            <Option value="todo">Belum</Option>
+            <Option value="in_progress">Proses</Option>
             <Option value="done">Selesai</Option>
           </Select>
         </Form.Item>
@@ -106,9 +106,9 @@ const TaskModal: React.FC<TaskModalProps> = ({
           rules={[{ required: true, message: 'Pilih prioritas' }]}
         >
           <Select placeholder="Pilih prioritas">
-            <Option value="low">Low</Option>
-            <Option value="medium">Medium</Option>
-            <Option value="high">High</Option>
+            <Option value="low">Rendah</Option>
+            <Option value="medium">Sedang</Option>
+            <Option value="high">Tinggi</Option>
           </Select>
         </Form.Item>
 
