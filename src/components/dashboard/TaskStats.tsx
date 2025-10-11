@@ -3,11 +3,11 @@ import { CheckCircleIcon, ClockIcon, AlertCircleIcon, ListIcon } from 'lucide-re
 import { useTaskStore } from '../../store/useTaskStore';
 
 export function TaskStats() {
-  const { tasks, loading, fetchTasks } = useTaskStore();
+  const { stats, loading, statsTask } = useTaskStore();
 
   useEffect(() => {
-    fetchTasks();
-  }, [fetchTasks]);
+    statsTask();
+  }, [statsTask]);
 
   if (loading) {
     return <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -20,12 +20,12 @@ export function TaskStats() {
     </div>;
   }
 
-  const totalTasks = tasks.length;
-  const completedTasks = tasks.filter(task => task.status === 'completed').length;
-  const inProgressTasks = tasks.filter(task => task.status === 'in-progress').length;
-  const pendingTasks = tasks.filter(task => task.status === 'pending').length;
+const totalTasks = stats.total;
+const completedTasks = stats.done;
+const inProgressTasks = stats.in_progress;
+const pendingTasks = stats.todo;
 
-  const stats = [{
+  const cards = [{
     title: 'Total Tugas',
     value: totalTasks,
     icon: <ListIcon size={24} className="text-blue-500" />,
@@ -48,7 +48,7 @@ export function TaskStats() {
   }];
 
   return <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-      {stats.map((stat, index) => <div key={index} className={`${stat.bgColor} rounded-lg p-6 shadow-sm`}>
+      {cards.map((stat, index) => <div key={index} className={`${stat.bgColor} rounded-lg p-6 shadow-sm`}>
           <div className="flex items-center justify-between">
             <div>
               <p className="text-gray-500 text-sm font-medium">{stat.title}</p>

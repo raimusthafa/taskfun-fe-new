@@ -12,11 +12,20 @@ interface Task {
   status: string;
 }
 
+interface Stats {
+  done: number;
+  in_progress: number;
+  todo: number;
+  total: number;
+}
+
 interface TaskState {
   tasks: Task[];
+  stats: Stats;
   loading: boolean;
   error: string | null;
   fetchTasks: () => Promise<void>;
+  statsTask: () => Promise<void>;
   createTask: (taskData: Omit<Task, 'id' >) => Promise<void>;
   updateTask: (id: string, updates: Partial<Task>) => Promise<void>;
   deleteTask: (id: string) => Promise<void>;
@@ -24,6 +33,7 @@ interface TaskState {
 
 export const useTaskStore = create<TaskState>((set) => ({
   tasks: [],
+  stats: { done: 0, in_progress: 0, todo: 0, total: 0 },
   loading: false,
   error: null,
 
@@ -41,7 +51,8 @@ createTask: async (taskData) => {
   set({ loading: true, error: null });
 
   try {
-    console.log('📤 Data yang dikirim ke API:', taskData); // log data sebelum dikirim
+    // log data sebelum dikirim
+    // console.log('📤 Data yang dikirim ke API:', taskData); 
 
     const response = await api.post('/tasks', taskData);
 
@@ -83,4 +94,14 @@ createTask: async (taskData) => {
       set({ error: error.response?.data?.message || error.message, loading: false });
     }
   },
+
+  statsTask: async () => {
+    set({ loading: true, error: null });
+    try {
+      const response = await api.get(`/tasks/counts`);
+      set({ stats: response.data, loading: false  });
+    } catch (error: any) {
+      set({ error: error.response?.data?.message || error.message, loading: false });
+    }
+  }
 }));
