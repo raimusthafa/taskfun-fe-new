@@ -10,12 +10,13 @@ import { useTaskStore } from '../../store/useTaskStore';
 import { useUserStore } from '../../store/useUserStore';
 import { useCategoryStore } from '../../store/useCategoryStore';
 import { TaskTable } from './TaskTable';
+import { TaskCalendar } from './TaskCalendar';
 
 export function TaskView() {
   const [viewMode, setViewMode] = useState<'card' | 'table' | 'calendar'>('card');
   const [visible, setVisible] = useState(false);
   
-  const { loading, fetchTasks, createTask } = useTaskStore();
+  const { tasks, loading, fetchTasks, createTask } = useTaskStore();
   // const { tasks, loading, fetchTasks, createTask } = useTaskStore();
   const { user } = useUserStore();
   const { categories } = useCategoryStore();
@@ -55,6 +56,13 @@ export function TaskView() {
   //   priority: task.prioritas
   // }));
 
+    const calendarTasks = tasks.map(task => ({
+    id: parseInt(task.id),
+    title: task.tugas,
+    date: task.tenggat,
+    priority: task.prioritas as 'high' | 'medium' | 'low'
+  }));
+
   if (loading) {
     return <div className="flex justify-center items-center h-64">Loading tasks...</div>;
   }
@@ -88,6 +96,7 @@ export function TaskView() {
       <div>
         {viewMode === 'card' && <TaskCard />}
         {viewMode === 'table' && <TaskTable />}
+        {viewMode === 'calendar' && <TaskCalendar />}
         {/* {viewMode === 'table' && <TaskTable tasks={tasks} />}
         {viewMode === 'calendar' && <TaskCalendar tasks={calendarTasks} />} */}
       </div>
