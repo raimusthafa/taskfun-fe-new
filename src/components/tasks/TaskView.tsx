@@ -9,6 +9,7 @@ import { PlusOutlined } from '@ant-design/icons';
 import { useTaskStore } from '../../store/useTaskStore';
 import { useUserStore } from '../../store/useUserStore';
 import { useCategoryStore } from '../../store/useCategoryStore';
+import { TaskTable } from './TaskTable';
 
 export function TaskView() {
   const [viewMode, setViewMode] = useState<'card' | 'table' | 'calendar'>('card');
@@ -86,6 +87,7 @@ export function TaskView() {
       </div>
       <div>
         {viewMode === 'card' && <TaskCard />}
+        {viewMode === 'table' && <TaskTable />}
         {/* {viewMode === 'table' && <TaskTable tasks={tasks} />}
         {viewMode === 'calendar' && <TaskCalendar tasks={calendarTasks} />} */}
       </div>

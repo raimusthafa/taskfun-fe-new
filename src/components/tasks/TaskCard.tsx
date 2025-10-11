@@ -1,5 +1,6 @@
 import { CheckCircleIcon, ClockIcon, CalendarIcon, TagIcon } from 'lucide-react';
 import { useTaskStore } from '../../store/useTaskStore';
+import { formatDate } from '@/lib/utils';
 
 export function TaskCard() {
   const { tasks } = useTaskStore();
@@ -55,7 +56,7 @@ export function TaskCard() {
             <p className="text-gray-600 mt-2 text-sm">{task.deskripsi}</p>
             <div className="flex items-center mt-4 text-sm text-gray-500">
               <CalendarIcon size={14} className="mr-1" />
-              <span>{task.tenggat}</span>
+              <span>{formatDate(task.tenggat)}</span>
             </div>
             <div className="flex items-center justify-between mt-4">
               <div className="flex flex-wrap gap-2">
