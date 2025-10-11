@@ -69,19 +69,20 @@ export function Sidebar({ isOpen, onClose, isDesktopOpen, setIsDesktopOpen }: Si
               TaskFun
             </h1>
           ) : (
-            <Tooltip title="Buka menu">
+            <Tooltip title="Buka menu" placement='rightTop'>
               <button
                 onClick={() => setIsDesktopOpen(true)}
                 aria-label="Open sidebar"
                 className="text-blue-600 focus:outline-none z-10"
                 style={{ position: 'relative' }}
+                
               >
                 <MenuIcon size={24} />
               </button>
             </Tooltip>
           )}
           {isDesktopOpen && (
-            <Tooltip title="Tutup menu">
+            <Tooltip title="Tutup menu" placement='rightTop'>
               <button
                 onClick={() => setIsDesktopOpen(false)}
                 aria-label="Close sidebar"
