@@ -1,4 +1,4 @@
-import { CheckCircleIcon, ClockIcon, CalendarIcon, TagIcon } from 'lucide-react';
+import { CheckCircleIcon, ClockIcon, CalendarIcon } from 'lucide-react';
 import { useTaskStore } from '../../store/useTaskStore';
 import { formatDate } from '@/lib/utils';
 

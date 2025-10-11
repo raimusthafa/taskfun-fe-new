@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useUserStore } from "../store/useUserStore";
 import { message } from "antd";
 import { CheckCircleTwoTone, CloseCircleOutlined } from '@ant-design/icons';
@@ -80,31 +80,31 @@ useEffect(() => {
   };
 
   // New handlers for test buttons
-  const handleTestSuccess = () => {
-message.open({
-  type: "success",
-  duration: 4,
-  icon: <CheckCircleTwoTone twoToneColor="#52c41a" style={{ fontSize: "20px" }} />,
-  content: (
-    <div className="text-lg">
-      Yeay! Registrasi berhasil 🎉
-    </div>
-  ),
-});
-  };
+//   const handleTestSuccess = () => {
+// message.open({
+//   type: "success",
+//   duration: 4,
+//   icon: <CheckCircleTwoTone twoToneColor="#52c41a" style={{ fontSize: "20px" }} />,
+//   content: (
+//     <div className="text-lg">
+//       Yeay! Registrasi berhasil 🎉
+//     </div>
+//   ),
+// });
+//   };
 
-  const handleTestError = () => {
-message.open({
-  type: "error",
-  duration: 4,
-  icon: <CloseCircleOutlined twoToneColor="#52c41a" style={{ fontSize: "20px" }} />,
-  content: (
-    <div className="text-lg">
-      Username sudah digunakan.
-    </div>
-  ),
-  });
-  };
+//   const handleTestError = () => {
+// message.open({
+//   type: "error",
+//   duration: 4,
+//   icon: <CloseCircleOutlined twoToneColor="#52c41a" style={{ fontSize: "20px" }} />,
+//   content: (
+//     <div className="text-lg">
+//       Username sudah digunakan.
+//     </div>
+//   ),
+//   });
+//   };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-blue-100">
