@@ -76,6 +76,7 @@ export const useCategoryStore = create<CategoryState>((set) => ({
       set((state) => ({
         categories: state.categories.filter((cat) => cat.id_category !== id),
         loading: false,
+        success: "Category deleted successfully",
       }));
     } catch (error: any) {
       set({ error: error.response?.data?.message || error.message, loading: false });

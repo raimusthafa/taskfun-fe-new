@@ -1,9 +1,41 @@
 import { useTaskStore } from '@/store/useTaskStore';
 import { CheckCircleIcon, ClockIcon, MoreVerticalIcon } from 'lucide-react';
 import { formatDate } from '@/lib/utils';
+import { Dropdown, Menu, Space, type MenuProps } from 'antd';
+import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
 
 export function TaskTable(){
   const { tasks } = useTaskStore();
+
+  const items: MenuProps['items'] = [
+  {
+    label: (
+    <div className='flex gap-3'>
+      <EditOutlined/>
+      <span>
+        Edit
+      </span>
+    </div>
+    ),
+    key: '0',
+  },
+    {
+    type: 'divider',
+  },
+  {
+    label: (
+    <div className='flex gap-3'>
+      <DeleteOutlined/>
+      <span>
+        Hapus
+      </span>
+    </div>
+    ),
+    key: '1',
+    danger: true,
+  },
+
+];
 
   const getPriorityColor = (priority: string) => {
     switch (priority) {
@@ -81,7 +113,14 @@ export function TaskTable(){
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text- text-sm font-medium">
                   <button className="text-gray-400 hover:text-gray-500">
-                    <MoreVerticalIcon size={16} />
+                        <Dropdown menu={{ items }} placement="bottomRight">
+      <a onClick={(e) => e.preventDefault()}>
+        <Space className='cursor-pointer'>
+                  <MoreVerticalIcon size={16} />
+        </Space>
+      </a>
+    </Dropdown>
+
                   </button>
                 </td>
               </tr>)}

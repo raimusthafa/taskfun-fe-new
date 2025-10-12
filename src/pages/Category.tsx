@@ -74,9 +74,9 @@ const CategoryPage: React.FC = () => {
   const handleDelete = async (id: number) => {
     try {
       await deleteCategory(id);
-      message.success('Category deleted successfully');
+      await fetchCategories();
     } catch {
-      message.error('Failed to delete category');
+      // Error handling is managed by the store and useEffect
     }
   };
 
@@ -172,7 +172,7 @@ const handleCreateOk = async () => {
             title={<span>Are you sure you want to delete category <strong>{record.category}</strong>?</span>}
             onConfirm={() => handleDelete(record.id_category)}
             okText="Yes"
-            cancelText="No"
+            cancelText="Cancel"
             placement="bottomRight"
           >
             <Tooltip title="Delete">
