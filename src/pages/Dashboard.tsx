@@ -4,7 +4,7 @@ import { TaskView } from '../components/tasks/TaskView';
 import { Chart2 } from '@/components/ui/chart2';
 import { useTaskStore } from '@/store/useTaskStore';
 import { useEffect } from 'react';
-import { formatDate } from '@/lib/utils';
+import { formatRelativeDate } from '@/lib/utils';
 import { CalendarIcon } from 'lucide-react';
 // import { Chart2 } from '@/components/ui/chart2';
 
@@ -30,7 +30,7 @@ export function Dashboard() {
                   <h4 className="font-medium">{item.tugas}</h4>
                   <div className="flex items-center mt-1 text-sm text-gray-500">
                   <CalendarIcon size={14} className="mr-1" />
-                  <span className="text-sm text-gray-500">{formatDate(item.tenggat)}</span>
+                  <span className="text-sm text-gray-500">{formatRelativeDate(item.tenggat)}</span>
                   </div>
                 </div>
                 <div className="bg-red-100 text-red-800 text-xs px-2 py-1 rounded">
