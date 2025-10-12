@@ -21,6 +21,7 @@ interface Stats {
 
 interface TaskState {
   tasks: Task[];
+  highTasks: Task[];
   stats: Stats;
   loading: boolean;
   error: string | null;
@@ -29,10 +30,12 @@ interface TaskState {
   createTask: (taskData: Omit<Task, 'id' >) => Promise<void>;
   updateTask: (id: string, updates: Partial<Task>) => Promise<void>;
   deleteTask: (id: string) => Promise<void>;
+  taskHigh: () => Promise<void>;
 }
 
 export const useTaskStore = create<TaskState>((set) => ({
   tasks: [],
+  highTasks: [],
   stats: { done: 0, in_progress: 0, todo: 0, total: 0 },
   loading: false,
   error: null,
@@ -100,6 +103,16 @@ createTask: async (taskData) => {
     try {
       const response = await api.get(`/tasks/counts`);
       set({ stats: response.data, loading: false  });
+    } catch (error: any) {
+      set({ error: error.response?.data?.message || error.message, loading: false });
+    }
+  },
+
+  taskHigh: async () => {
+    set({ loading: true, error: null });
+    try {
+      const response = await api.get(`/tasks/high`);
+      set({ highTasks: response.data, loading: false  });
     } catch (error: any) {
       set({ error: error.response?.data?.message || error.message, loading: false });
     }

@@ -7,5 +7,5 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 export function formatDate(dateString: string): string {
-  return dayjs(dateString).format('DD-MM-YY HH:mm')
+  return dayjs(dateString).format('HH:mm / DD-MM-YY')
 }

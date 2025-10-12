@@ -2,9 +2,20 @@ import { Link } from 'react-router-dom';
 import { TaskStats } from '../components/dashboard/TaskStats';
 import { TaskView } from '../components/tasks/TaskView';
 import { Chart2 } from '@/components/ui/chart2';
+import { useTaskStore } from '@/store/useTaskStore';
+import { useEffect } from 'react';
+import { formatDate } from '@/lib/utils';
+import { CalendarIcon } from 'lucide-react';
 // import { Chart2 } from '@/components/ui/chart2';
 
 export function Dashboard() {
+
+  const { highTasks, taskHigh } = useTaskStore();
+
+  useEffect(() => {
+    taskHigh();
+  }, [taskHigh]);
+
   return <div className="space-y-6">
       <h1 className="text-2xl font-bold text-gray-800">Dashboard</h1>
       <TaskStats />
@@ -14,13 +25,16 @@ export function Dashboard() {
         <div className="bg-white rounded-lg p-6 shadow-sm">
           <h3 className="text-lg font-semibold mb-4">Tugas Prioritas Tinggi</h3>
           <div className="space-y-3">
-            {[1, 2, 3, 4, 5].map(item => <div key={item} className="flex items-center justify-between p-3 border border-gray-100 rounded-lg hover:bg-gray-50">
+            {highTasks.map(item => <div className="flex items-center justify-between p-3 border border-gray-100 rounded-lg hover:bg-gray-50">
                 <div>
-                  <h4 className="font-medium">Tugas Penting #{item}</h4>
-                  <p className="text-sm text-gray-500">Tenggat: Besok</p>
+                  <h4 className="font-medium">{item.tugas}</h4>
+                  <div className="flex items-center mt-1 text-sm text-gray-500">
+                  <CalendarIcon size={14} className="mr-1" />
+                  <span className="text-sm text-gray-500">{formatDate(item.tenggat)}</span>
+                  </div>
                 </div>
                 <div className="bg-red-100 text-red-800 text-xs px-2 py-1 rounded">
-                  Tinggi
+                  {item.prioritas}
                 </div>
               </div>)}
           </div>
