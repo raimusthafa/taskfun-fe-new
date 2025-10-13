@@ -3,13 +3,14 @@ import { Dashboard } from './pages/Dashboard';
 import { History } from './pages/History';
 import { About } from './pages/About';
 import Tugas from './pages/Tugas';
-import LandingPage from './pages/LandingPage';
+// import LandingPage from './pages/LandingPage';
 import { Layout } from './components/Layout';
 import Register from './components/RegisterPage';
 import Login from './components/LoginPage';
 import NotFound from './components/NotFound';
 import PrivateRoute from './components/PrivateRoute';
 import Category from './pages/Category';
+import LandingPage from './pages/LandingPage';
 
 export function App() {
 

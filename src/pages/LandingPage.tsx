@@ -1,6 +1,8 @@
 import { Layout, Button, Typography, Row, Col, Card } from 'antd';
-import { CheckCircleOutlined, ClockCircleOutlined, TeamOutlined, LoginOutlined } from '@ant-design/icons';
+import { CheckCircleOutlined, ClockCircleOutlined, TeamOutlined } from '@ant-design/icons';
 import { Link } from 'react-router-dom';
+import { Highlighter } from '@/components/ui/highlighter';
+import { RainbowButton } from '@/components/ui/rainbow-button';
 
 const { Header, Content, Footer } = Layout;
 const { Title, Paragraph } = Typography;
@@ -22,14 +24,32 @@ const LandingPage = () => {
       </Header>
 
       <Content style={{ padding: '80px 50px', textAlign: 'center' }}>
-        <Title level={1}>Kelola Tugasmu dengan Mudah dan Cepat</Title>
-        <Paragraph style={{ maxWidth: 600, margin: '0 auto 40px' }}>
-          TaskFun adalah aplikasi manajemen tugas yang membantu kamu tetap fokus, teratur, dan produktif setiap hari.
+        <Title level={1} style={{ fontSize: '3.2rem', fontWeight: 700 }}>
+          Take The Next Step In Your Productivity
+        </Title>
+
+        <Paragraph
+          style={{
+            maxWidth: 700,
+            margin: '20px auto 40px',
+            fontSize: 18,
+            color: '#555',
+          }}
+        >
+          Nowadays, professionals are expected to have great{' '}
+          {/* <Text mark style={{ backgroundColor: '#fef08a' }}>
+            organizational, focus, and collaboration skills
+          </Text> */}
+          <Highlighter action="underline" color="#FF9800">
+              organizational, focus, and collaboration skills
+          </Highlighter>{" "}
+          . TaskFun’s 💡 smart tools help you stay on top of your work and boost
+          productivity every day.
         </Paragraph>
         <Link to="/dashboard">
-          <Button type="primary" size="large" icon={<LoginOutlined />}>
+          <RainbowButton >
             Mulai Sekarang
-          </Button>
+          </RainbowButton>
         </Link>
 
         {/* Fitur Section */}
