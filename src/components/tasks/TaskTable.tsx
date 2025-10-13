@@ -1,7 +1,7 @@
 import { useTaskStore } from '@/store/useTaskStore';
 import { CheckCircleIcon, ClockIcon, MoreVerticalIcon } from 'lucide-react';
 import { formatDate } from '@/lib/utils';
-import { Dropdown, Menu, Space, type MenuProps } from 'antd';
+import { Dropdown, Space, type MenuProps } from 'antd';
 import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
 
 export function TaskTable(){
