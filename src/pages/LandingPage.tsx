@@ -96,21 +96,21 @@ const LandingPage = () => {
           <Row gutter={[24, 24]} justify="center" style={{ marginTop: 30 }}>
             <Col xs={24} sm={12} md={8}>
               <Card bordered={false} hoverable>
-                <CheckCircleOutlined style={{ fontSize: 36, color: '#1890ff' }} />
+                <img src="/manage.jpg" alt="" />
                 <Title level={4}>Manajemen Tugas</Title>
                 <Paragraph>Tambahkan, tandai, dan hapus tugas dengan mudah.</Paragraph>
               </Card>
             </Col>
             <Col xs={24} sm={12} md={8}>
               <Card bordered={false} hoverable>
-                <ClockCircleOutlined style={{ fontSize: 36, color: '#1890ff' }} />
+                <img src="/deadline.jpg" alt="" />
                 <Title level={4}>Deadline Reminder</Title>
                 <Paragraph>Ingatkan kamu tentang deadline yang mendekat.</Paragraph>
               </Card>
             </Col>
             <Col xs={24} sm={12} md={8}>
               <Card bordered={false} hoverable>
-                <TeamOutlined style={{ fontSize: 36, color: '#1890ff' }} />
+                <img src="/collab.jpg" alt="" />
                 <Title level={4}>Kolaborasi Tim</Title>
                 <Paragraph>Kerja sama dalam proyek bersama tim kamu.</Paragraph>
               </Card>
