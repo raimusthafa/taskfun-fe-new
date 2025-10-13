@@ -1,5 +1,4 @@
 import { Layout, Button, Typography, Row, Col, Card } from 'antd';
-import { CheckCircleOutlined, ClockCircleOutlined, TeamOutlined } from '@ant-design/icons';
 import { Link } from 'react-router-dom';
 import { Highlighter } from '@/components/ui/highlighter';
 import { RainbowButton } from '@/components/ui/rainbow-button';
