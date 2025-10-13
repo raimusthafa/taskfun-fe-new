@@ -3,23 +3,72 @@ import { CheckCircleOutlined, ClockCircleOutlined, TeamOutlined } from '@ant-des
 import { Link } from 'react-router-dom';
 import { Highlighter } from '@/components/ui/highlighter';
 import { RainbowButton } from '@/components/ui/rainbow-button';
+import { useEffect, useState } from 'react';
 
 const { Header, Content, Footer } = Layout;
 const { Title, Paragraph } = Typography;
 
 const LandingPage = () => {
+
+    const [isScrolled, setIsScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 10);
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
   return (
-    <Layout style={{ minHeight: '100vh' }}>
-      <Header style={{ backgroundColor: '#fff', boxShadow: '0 2px 8px #f0f1f2', zIndex: 1000 }}>
-        <div className="logo" style={{ float: 'left', fontWeight: 'bold', fontSize: 20 }}>
-          TaskFun
-        </div>
-        <div style={{ float: 'right' }}>
-          <Link to="/">
-            <Button type="primary" size="large">
-              Happy Work
-            </Button>
-          </Link>
+    <Layout style={{ minHeight: '100vh', backgroundColor: '#fff' }}>
+      {/* Sticky Header */}
+      <Header
+        style={{
+          position: 'sticky',
+          top: 0,
+          zIndex: 1000,
+          backgroundColor: '#fff',
+          transition: 'all 0.3s ease',
+          boxShadow: isScrolled ? '0 2px 12px rgba(0,0,0,0.05)' : 'none',
+        }}
+      >
+        <div
+          style={{
+            maxWidth: 1200,
+            margin: '0 auto',
+            padding: '0 20px',
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            height: 64,
+          }}
+        >
+          <div style={{ fontWeight: 'bold', fontSize: 22, color: '#111' }}>
+            TaskFun
+          </div>
+
+          <div>
+            <Link to="/login">
+              <Button type="text" style={{ marginRight: 20, color: '#111' }}>
+                Login
+              </Button>
+            </Link>
+            <Link to="/register">
+              <Button
+                type="primary"
+                size="middle"
+                style={{
+                  backgroundColor: '#16a34a',
+                  borderColor: '#16a34a',
+                  borderRadius: 24,
+                  fontWeight: 500,
+                }}
+              >
+                Start for FREE
+              </Button>
+            </Link>
+          </div>
         </div>
       </Header>
 
