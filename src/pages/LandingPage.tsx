@@ -24,20 +24,18 @@ const LandingPage = () => {
     <Layout style={{ minHeight: '100vh', backgroundColor: '#fff' }}>
       {/* Sticky Header */}
       <Header
+        className='mx-28 rounded-xl'
         style={{
-          position: 'sticky',
-          top: 0,
+          position: 'sticky', 
+          top: 5,
           zIndex: 1000,
-          backgroundColor: '#fff',
+          backgroundColor: '#ffff',
           transition: 'all 0.3s ease',
-          boxShadow: isScrolled ? '0 2px 12px rgba(0,0,0,0.05)' : 'none',
+          boxShadow: isScrolled ? '0 2px 12px rgba(0,0,0,0.08)' : 'none',
         }}
       >
         <div
           style={{
-            maxWidth: 1200,
-            margin: '0 auto',
-            padding: '0 20px',
             display: 'flex',
             justifyContent: 'space-between',
             alignItems: 'center',
@@ -50,24 +48,15 @@ const LandingPage = () => {
 
           <div>
             <Link to="/login">
-              <Button type="text" style={{ marginRight: 20, color: '#111' }}>
+              <Button type='dashed' style={{ marginRight: 15, color: '#111' }}>
                 Login
               </Button>
             </Link>
-            <Link to="/register">
-              <Button
-                type="primary"
-                size="middle"
-                style={{
-                  backgroundColor: '#16a34a',
-                  borderColor: '#16a34a',
-                  borderRadius: 24,
-                  fontWeight: 500,
-                }}
-              >
-                Start for FREE
-              </Button>
-            </Link>
+        <Link to="/register">
+          <RainbowButton >
+            Mulai Sekarang
+          </RainbowButton>
+        </Link>
           </div>
         </div>
       </Header>
