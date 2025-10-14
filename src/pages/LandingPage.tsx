@@ -236,6 +236,35 @@ const LandingPage = () => {
   </Row>
 </div>
 
+<div className="mt-32 text-center">
+  <Title level={2}>What Our Users Say</Title>
+  <Row gutter={[32, 32]} justify="center" style={{ marginTop: 40 }}>
+    {[
+      { name: "Alya", role: "Project Manager", text: "TaskFun keeps my team organized and motivated every day!" },
+      { name: "Dimas", role: "Freelancer", text: "A minimalist task app that actually makes me more productive." },
+      { name: "Sarah", role: "Student", text: "I finally manage deadlines easily without stress." },
+    ].map((t, i) => (
+      <Col xs={22} md={7} key={i}>
+        <Card bordered={false} style={{ borderRadius: 16, boxShadow: "0 4px 10px rgba(0,0,0,0.05)" }}>
+          <Paragraph style={{ fontStyle: "italic" }}>"{t.text}"</Paragraph>
+          <Paragraph strong>- {t.name}, {t.role}</Paragraph>
+        </Card>
+      </Col>
+    ))}
+  </Row>
+</div>
+
+<div className="mt-32 py-16 text-center bg-gray-50 rounded-2xl">
+  <Title level={2}>Ready to Supercharge Your Productivity?</Title>
+  <Paragraph style={{ color: "#555", maxWidth: 700, margin: "20px auto" }}>
+    Join thousands of users who are getting more done with TaskFun.
+  </Paragraph>
+  <Link to="/register">
+    <RainbowButton>Get Started for Free</RainbowButton>
+  </Link>
+</div>
+
+
         {/* 
         <div style={{ marginTop: 100 }}>
           <Title level={2}>Tampilan Antarmuka</Title>
