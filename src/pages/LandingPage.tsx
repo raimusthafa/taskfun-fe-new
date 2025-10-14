@@ -189,7 +189,54 @@ const LandingPage = () => {
       ))}
     </div>
 
-        {/* Preview Dashboard Section */}
+    <div className="mt-32 text-center">
+  <Title level={2}>How It Works</Title>
+  <Paragraph style={{ color: "#555", maxWidth: 700, margin: "0 auto 40px" }}>
+    Get started with TaskFun in just a few easy steps — stay focused and achieve more every day.
+  </Paragraph>
+
+  <Row gutter={[32, 32]} justify="center">
+    {[
+      { step: "1", title: "Sign Up", desc: "Create your free account in seconds." },
+      { step: "2", title: "Add Your Tasks", desc: "Organize your projects and set priorities." },
+      { step: "3", title: "Track Progress", desc: "Monitor your achievements effortlessly." },
+    ].map((item) => (
+      <Col xs={24} sm={12} md={6} key={item.step}>
+        <div className="p-6 border rounded-xl shadow-sm hover:shadow-md transition">
+          <div className="text-4xl font-bold text-blue-500 mb-3">{item.step}</div>
+          <Title level={4}>{item.title}</Title>
+          <Paragraph style={{ color: "#555" }}>{item.desc}</Paragraph>
+        </div>
+      </Col>
+    ))}
+  </Row>
+</div>
+
+<div className="mt-32 text-center">
+  <Title level={2}>Why Choose TaskFun?</Title>
+  <Paragraph style={{ color: "#555", maxWidth: 700, margin: "0 auto 40px" }}>
+    Designed to make your daily workflow smoother, faster, and more enjoyable.
+  </Paragraph>
+
+  <Row gutter={[32, 32]} justify="center">
+    {[
+      { icon: "⚡", title: "Fast & Lightweight", desc: "Built with performance in mind." },
+      { icon: "🔒", title: "Secure & Reliable", desc: "Your data stays safe and private." },
+      { icon: "🌈", title: "Beautiful UI", desc: "Enjoy a delightful and intuitive interface." },
+      { icon: "🤝", title: "Collaboration Ready", desc: "Work together with your teammates easily." },
+    ].map((item, i) => (
+      <Col xs={24} sm={12} md={6} key={i}>
+        <div className="p-6 border rounded-xl shadow-sm hover:shadow-md transition">
+          <div className="text-4xl mb-2">{item.icon}</div>
+          <Title level={4}>{item.title}</Title>
+          <Paragraph style={{ color: "#555" }}>{item.desc}</Paragraph>
+        </div>
+      </Col>
+    ))}
+  </Row>
+</div>
+
+        {/* 
         <div style={{ marginTop: 100 }}>
           <Title level={2}>Tampilan Antarmuka</Title>
           <img
@@ -197,7 +244,7 @@ const LandingPage = () => {
             alt="Preview Dashboard"
             style={{ maxWidth: '90%', height: 'auto', marginTop: 30, borderRadius: 10, boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }}
           />
-        </div>
+        </div> */}
       </Content>
 
       <Footer style={{ textAlign: 'center' }}>
