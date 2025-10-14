@@ -1,4 +1,5 @@
 import { Layout, Button, Typography, Row, Col, Card } from 'antd';
+import { ArrowRightOutlined } from '@ant-design/icons';
 import { Link } from 'react-router-dom';
 import { Highlighter } from '@/components/ui/highlighter';
 import { RainbowButton } from '@/components/ui/rainbow-button';
@@ -71,7 +72,7 @@ const LandingPage = () => {
 
           <div>
             <Link to="/login">
-              <Button type='dashed' style={{ marginRight: 15, color: '#111' }}>
+              <Button variant='text' color='default'>
                 Login
               </Button>
             </Link>
@@ -109,15 +110,15 @@ const LandingPage = () => {
         </Paragraph>
         <Link to="/dashboard">
           <RainbowButton >
-            Mulai Sekarang
+            Mulai Sekarang <ArrowRightOutlined />
           </RainbowButton>
         </Link>
 
 {/* feature section */}
  <div style={{ marginTop: 100, marginBottom: 100 }}>
-      <Title level={2} style={{ textAlign: "center", marginBottom: 60 }}>
+      {/* <Title level={2} style={{ textAlign: "center", marginBottom: 60 }}>
         Key Features
-      </Title>
+      </Title> */}
 
       {features.map((feature, index) => (
         <Row
@@ -126,11 +127,11 @@ const LandingPage = () => {
           align="middle"
           justify="center"
           style={{
-            marginBottom: 80,
+            marginBottom: 40,
             flexDirection: feature.reverse ? "row-reverse" : "row",
           }}
         >
-          <Col xs={24} md={10}>
+          <Col xs={22} md={8}>
             <Card
               hoverable
               bordered={false}
