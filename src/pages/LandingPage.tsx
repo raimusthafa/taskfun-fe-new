@@ -114,7 +114,7 @@ const LandingPage = () => {
         </Paragraph>
         <Link to="/dashboard">
           <RainbowButton >
-            Mulai Sekarang 
+            Mulai Sekarang <ArrowRightOutlined />
           </RainbowButton>
         </Link>
         </div>
