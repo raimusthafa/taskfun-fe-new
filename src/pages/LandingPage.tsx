@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import { Highlighter } from '@/components/ui/highlighter';
 import { RainbowButton } from '@/components/ui/rainbow-button';
 import { useEffect, useState } from 'react';
+import { BackgroundLines } from '@/components/ui/background-lines';
 
 const { Header, Content, Footer } = Layout;
 const { Title, Paragraph } = Typography;
@@ -86,6 +87,9 @@ const LandingPage = () => {
       </Header>
 
       <Content style={{ padding: '80px 50px', textAlign: 'center' }}>
+        <BackgroundLines>
+
+        <div>
         <Title level={1} style={{ fontSize: '3.2rem', fontWeight: 700 }}>
           Take The Next Step In Your Productivity
         </Title>
@@ -110,9 +114,11 @@ const LandingPage = () => {
         </Paragraph>
         <Link to="/dashboard">
           <RainbowButton >
-            Mulai Sekarang <ArrowRightOutlined />
+            Mulai Sekarang 
           </RainbowButton>
         </Link>
+        </div>
+        </BackgroundLines>
 
 {/* feature section */}
  <div style={{ marginTop: 100, marginBottom: 100 }}>
