@@ -19,6 +19,30 @@ const LandingPage = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+    const features = [
+    {
+      title: "Task Management",
+      description:
+        "Easily create, organize, and track your daily tasks with a clean and intuitive interface.",
+      image: "/manage.jpg",
+      reverse: false,
+    },
+    {
+      title: "Smart Deadline Reminders",
+      description:
+        "Never miss a deadline again — get automatic reminders and stay on top of your priorities.",
+      image: "/deadline.jpg",
+      reverse: true,
+    },
+    {
+      title: "Team Collaboration",
+      description:
+        "Collaborate effortlessly with your teammates and boost productivity together in one workspace.",
+      image: "/collab.jpg",
+      reverse: false,
+    },
+  ];
+
   return (
     <Layout style={{ minHeight: '100vh', backgroundColor: '#fff' }}>
       {/* Sticky Header */}
@@ -89,33 +113,74 @@ const LandingPage = () => {
           </RainbowButton>
         </Link>
 
-        {/* Fitur Section */}
-        <div style={{ marginTop: 80 }}>
-          <Title level={2}>Fitur Unggulan</Title>
-          <Row gutter={[24, 24]} justify="center" style={{ marginTop: 30 }}>
-            <Col xs={24} sm={12} md={8}>
-              <Card bordered={false} hoverable>
-                <img src="/manage.jpg" alt="" />
-                <Title level={4}>Manajemen Tugas</Title>
-                <Paragraph>Tambahkan, tandai, dan hapus tugas dengan mudah.</Paragraph>
-              </Card>
-            </Col>
-            <Col xs={24} sm={12} md={8}>
-              <Card bordered={false} hoverable>
-                <img src="/deadline.jpg" alt="" />
-                <Title level={4}>Deadline Reminder</Title>
-                <Paragraph>Ingatkan kamu tentang deadline yang mendekat.</Paragraph>
-              </Card>
-            </Col>
-            <Col xs={24} sm={12} md={8}>
-              <Card bordered={false} hoverable>
-                <img src="/collab.jpg" alt="" />
-                <Title level={4}>Kolaborasi Tim</Title>
-                <Paragraph>Kerja sama dalam proyek bersama tim kamu.</Paragraph>
-              </Card>
-            </Col>
-          </Row>
-        </div>
+{/* feature section */}
+ <div style={{ marginTop: 100, marginBottom: 100 }}>
+      <Title level={2} style={{ textAlign: "center", marginBottom: 60 }}>
+        Key Features
+      </Title>
+
+      {features.map((feature, index) => (
+        <Row
+          key={index}
+          gutter={[48, 48]}
+          align="middle"
+          justify="center"
+          style={{
+            marginBottom: 80,
+            flexDirection: feature.reverse ? "row-reverse" : "row",
+          }}
+        >
+          <Col xs={24} md={10}>
+            <Card
+              hoverable
+              bordered={false}
+              style={{
+                overflow: "hidden",
+                borderRadius: 20,
+                boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
+              }}
+              cover={
+                <img
+                  src={feature.image}
+                  alt={feature.title}
+                  style={{
+                    width: "100%",
+                    height: 300,
+                    objectFit: "cover",
+                    borderRadius: 20,
+                  }}
+                />
+              }
+            />
+          </Col>
+
+          <Col xs={24} md={10}>
+            <div>
+              <Title
+                level={3}
+                style={{
+                  fontWeight: 700,
+                  color: "#1e293b",
+                  marginBottom: 20,
+                }}
+              >
+                {feature.title}
+              </Title>
+              <Paragraph
+                style={{
+                  fontSize: 16,
+                  lineHeight: 1.7,
+                  color: "#475569",
+                  maxWidth: 500,
+                }}
+              >
+                {feature.description}
+              </Paragraph>
+            </div>
+          </Col>
+        </Row>
+      ))}
+    </div>
 
         {/* Preview Dashboard Section */}
         <div style={{ marginTop: 100 }}>
