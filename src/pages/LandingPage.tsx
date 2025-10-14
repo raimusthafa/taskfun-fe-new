@@ -1,25 +1,15 @@
-import { Layout, Button, Typography, Row, Col, Card } from 'antd';
+import { Layout, Typography, Row, Col, Card } from 'antd';
 import { ArrowRightOutlined } from '@ant-design/icons';
 import { Link } from 'react-router-dom';
 import { Highlighter } from '@/components/ui/highlighter';
 import { RainbowButton } from '@/components/ui/rainbow-button';
-import { useEffect, useState } from 'react';
 import { BackgroundLines } from '@/components/ui/background-lines';
+import Navbar from '@/components/Navbar';
 
-const { Header, Content, Footer } = Layout;
+const { Content, Footer } = Layout;
 const { Title, Paragraph } = Typography;
 
 const LandingPage = () => {
-
-    const [isScrolled, setIsScrolled] = useState(false);
-
-  useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 10);
-    };
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
 
     const features = [
     {
@@ -48,43 +38,7 @@ const LandingPage = () => {
   return (
     <Layout style={{ minHeight: '100vh', backgroundColor: '#fff' }}>
       {/* Sticky Header */}
-      <Header
-        className='mx-28 rounded-xl'
-        style={{
-          position: 'sticky', 
-          top: 5,
-          zIndex: 1000,
-          backgroundColor: '#ffff',
-          transition: 'all 0.3s ease',
-          boxShadow: isScrolled ? '0 2px 12px rgba(0,0,0,0.08)' : 'none',
-        }}
-      >
-        <div
-          style={{
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            height: 64,
-          }}
-        >
-          <div style={{ fontWeight: 'bold', fontSize: 22, color: '#111' }}>
-            TaskFun
-          </div>
-
-          <div>
-            <Link to="/login">
-              <Button variant='text' color='default'>
-                Login
-              </Button>
-            </Link>
-        <Link to="/register">
-          <RainbowButton >
-            Mulai Sekarang
-          </RainbowButton>
-        </Link>
-          </div>
-        </div>
-      </Header>
+      <Navbar/>
 
       <Content style={{ padding: '80px 50px', textAlign: 'center' }}>
         <BackgroundLines>
