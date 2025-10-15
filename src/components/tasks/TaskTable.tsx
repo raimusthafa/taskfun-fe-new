@@ -1,19 +1,13 @@
 import { useTaskStore } from '@/store/useTaskStore';
 import { CheckCircleIcon, ClockIcon, MoreVerticalIcon } from 'lucide-react';
 import { formatDate } from '@/lib/utils';
+import { Link } from 'react-router-dom';
 import { Dropdown, Modal, Space, message, Form, Input, DatePicker, Select, type MenuProps } from 'antd';
 import { EditOutlined, DeleteOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
 import { useState, useEffect } from 'react';
 import dayjs from 'dayjs';
 
-interface TaskFormData {
-  id?: string;
-  tugas: string;
-  deskripsi: string;
-  prioritas: string;
-  tenggat: any; // Using any for Dayjs type
-  status: string;
-}
+import type { Task, TaskFormData } from '@/types/task';
 
 export function TaskTable() {
   const { tasks, deleteTask, updateTask } = useTaskStore();
@@ -257,7 +251,12 @@ export function TaskTable() {
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
                   <div className="text-sm font-medium text-gray-900">
-                    {task.tugas}
+                    <Link 
+                      to={`/tugas/${task.id}`}
+                      className="hover:text-blue-600 transition-colors"
+                    >
+                      {task.tugas}
+                    </Link>
                   </div>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">

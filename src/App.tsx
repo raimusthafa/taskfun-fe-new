@@ -8,6 +8,7 @@ import { Layout } from './components/Layout';
 import Register from './components/RegisterPage';
 import Login from './components/LoginPage';
 import NotFound from './components/NotFound';
+import DetailTask from './pages/DetailTask';
 import PrivateRoute from './components/PrivateRoute';
 import Category from './pages/Category';
 import LandingPage from './pages/LandingPage';
@@ -28,6 +29,7 @@ export function App() {
           <Route element={<Layout />}>
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/tugas" element={<Tugas />} />
+            <Route path="/tugas/:id" element={<DetailTask />} />
             <Route path="/category" element={<Category />} />
             <Route path="/history" element={<History />} />
             <Route path="/about" element={<About />} />

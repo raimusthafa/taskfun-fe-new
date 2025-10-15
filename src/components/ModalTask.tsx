@@ -6,28 +6,12 @@ import { useCategoryStore } from '../store/useCategoryStore';
 const { TextArea } = Input;
 const { Option } = Select;
 
-export interface TaskFormValues {
-  tugas: string;
-  deskripsi: string;
-  status: 'todo' | 'in_progres' | 'selesai';
-  prioritas: 'low' | 'medium' | 'high';
-  tenggat: dayjs.Dayjs;
-  kategori: string;
-}
-
-export interface TaskSubmitValues {
-  tugas: string;
-  deskripsi: string;
-  status: 'todo' | 'in_progres' | 'selesai';
-  prioritas: 'low' | 'medium' | 'high';
-  tenggat: string;
-  kategori: string;
-}
+import type { TaskModalFormValues, TaskCreateData } from '@/types/task';
 
 interface TaskModalProps {
   visible: boolean;
   onCancel: () => void;
-  onSubmit: (values: TaskSubmitValues) => void;
+  onSubmit: (values: TaskCreateData) => void;
 }
 
 const TaskModal: React.FC<TaskModalProps> = ({
@@ -41,10 +25,16 @@ const TaskModal: React.FC<TaskModalProps> = ({
   const handleOk = () => {
     form
       .validateFields()
-      .then((values: TaskFormValues) => {
-         const formattedValues = {
-          ...values,
-          tenggat: dayjs(values.tenggat).startOf('day').toISOString() // hasil: "2025-10-11T00:00:00.000Z"
+      .then((values: TaskModalFormValues) => {
+        const formattedValues: TaskCreateData = {
+          tugas: values.tugas,
+          deskripsi: values.deskripsi,
+          prioritas: values.prioritas,
+          status: values.status,
+          tenggat: dayjs(values.tenggat).startOf('day').toISOString(),
+          kategori: values.kategori,
+          id_user: 0, // Akan diisi di TaskView
+          id_category: 0 // Akan diisi di TaskView
         };
         onSubmit(formattedValues);
         form.resetFields(); // reset setelah submit sukses

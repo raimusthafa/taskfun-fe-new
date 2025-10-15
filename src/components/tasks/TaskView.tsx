@@ -1,10 +1,9 @@
 import { useState, useEffect } from 'react';
 import { LayoutGridIcon, ListIcon, CalendarIcon } from 'lucide-react';
 import { TaskCard } from './TaskCard';
-// import { TaskTable } from './TaskTable';
-// import { TaskCalendar } from './TaskCalendar';
 import { Button, message } from 'antd';
-import TaskModal, { type TaskSubmitValues } from '../ModalTask';
+import TaskModal from '../ModalTask';
+import type { TaskCreateData } from '@/types/task';
 import { PlusOutlined } from '@ant-design/icons';
 import { useTaskStore } from '../../store/useTaskStore';
 import { useUserStore } from '../../store/useUserStore';
@@ -25,7 +24,7 @@ export function TaskView() {
     fetchTasks();
   }, [fetchTasks]);
 
-  const handleSubmit = async (values: TaskSubmitValues) => {
+  const handleSubmit = async (values: TaskCreateData) => {
     try {
       // Find the selected category ID
       const selectedCategory = categories.find(cat => cat.category === values.kategori);

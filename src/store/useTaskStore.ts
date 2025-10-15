@@ -1,33 +1,16 @@
 import { create } from 'zustand';
 import api from '../lib/api';
-
-interface Task {
-  id: string;
-  tugas: string;
-  deskripsi: string;
-  prioritas: string;
-  tenggat: string;
-  id_user: number;
-  id_category: number;
-  status: string;
-}
-
-interface Stats {
-  done: number;
-  in_progress: number;
-  todo: number;
-  total: number;
-}
+import type { Task, TaskStats } from '@/types/task';
 
 interface TaskState {
   tasks: Task[];
   highTasks: Task[];
-  stats: Stats;
+  stats: TaskStats;
   loading: boolean;
   error: string | null;
   fetchTasks: () => Promise<void>;
   statsTask: () => Promise<void>;
-  createTask: (taskData: Omit<Task, 'id' >) => Promise<void>;
+  createTask: (taskData: Omit<Task, 'id' | 'id_user' | 'id_category'>) => Promise<void>;
   updateTask: (id: string, updates: Partial<Task>) => Promise<void>;
   deleteTask: (id: string) => Promise<void>;
   taskHigh: () => Promise<void>;
