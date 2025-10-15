@@ -6,7 +6,7 @@ export interface Task {
   tenggat: string;
   id_user: number;
   id_category: number;
-  status: 'todo' | 'in_progress' | 'completed';
+  status: 'todo' | 'in_progress' | 'done';
 }
 
 import type { Dayjs } from 'dayjs';
@@ -19,7 +19,7 @@ export interface TaskFormData extends Omit<Task, 'id' | 'id_user' | 'id_category
 export interface TaskModalFormValues {
   tugas: string;
   deskripsi: string;
-  status: 'todo' | 'in_progress' | 'completed';
+  status: 'todo' | 'in_progress' | 'done';
   prioritas: 'low' | 'medium' | 'high';
   tenggat: Dayjs;
   kategori: string;

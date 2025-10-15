@@ -136,7 +136,7 @@ export default function DetailTask() {
                 <div>
                   <p className="text-sm font-medium text-gray-500">Status</p>
                   <span className={`mt-1 inline-flex items-center px-3 py-1 rounded-full text-sm font-medium border ${getStatusColor(task.status)}`}>
-                    {task.status === 'completed' && <CheckCircleIcon className="w-4 h-4 mr-1.5" />}
+                    {task.status === 'done' && <CheckCircleIcon className="w-4 h-4 mr-1.5" />}
                     {getStatusText(task.status)}
                   </span>
                 </div>

@@ -270,7 +270,7 @@ export function TaskTable() {
                 <td className="px-6 py-4 whitespace-nowrap">
                   <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-gray-50`}>
                     <span className="mr-1">{getStatusIcon(task.status)}</span>
-                    {task.status === 'in_progress' ? 'Dalam Proses' : task.status === 'completed' ? 'Selesai' : 'Tertunda'}
+                    {task.status === 'in_progress' ? 'Dalam Proses' : task.status === 'done' ? 'Selesai' : 'Tertunda'}
                   </span>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
