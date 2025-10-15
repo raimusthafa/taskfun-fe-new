@@ -31,6 +31,7 @@ interface TaskState {
   updateTask: (id: string, updates: Partial<Task>) => Promise<void>;
   deleteTask: (id: string) => Promise<void>;
   taskHigh: () => Promise<void>;
+  getTaskById: (id: string) => Promise<Task | null>;
 }
 
 export const useTaskStore = create<TaskState>((set) => ({
@@ -115,6 +116,20 @@ createTask: async (taskData) => {
       set({ highTasks: response.data, loading: false  });
     } catch (error: any) {
       set({ error: error.response?.data?.message || error.message, loading: false });
+    }
+  },
+
+  getTaskById: async (id: string) => {
+    set({ loading: true, error: null });
+    try {
+      const response = await api.get(`/tasks/${id}`);
+      set({ loading: false });
+      return response.data;
+    } catch (error: any) {
+      const errorMessage = error.response?.data?.message || error.message || 'Gagal mengambil detail tugas';
+      set({ error: errorMessage, loading: false });
+      console.error('Error fetching task:', error);
+      return null;
     }
   }
 }));
