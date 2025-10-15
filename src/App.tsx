@@ -11,6 +11,7 @@ import NotFound from './components/NotFound';
 import PrivateRoute from './components/PrivateRoute';
 import Category from './pages/Category';
 import LandingPage from './pages/LandingPage';
+import Profile from './pages/Profile';
 
 export function App() {
 
@@ -30,6 +31,7 @@ export function App() {
             <Route path="/category" element={<Category />} />
             <Route path="/history" element={<History />} />
             <Route path="/about" element={<About />} />
+            <Route path="/profile" element={<Profile />} />
           </Route>
         </Route>
 

@@ -15,6 +15,9 @@ const DropdownUser: React.FC = () => {
     logout();
     navigate('/login');
   };
+  const handleProfile = () => {
+    navigate('/profile');
+  };
 
   const items: MenuProps['items'] = [
     {
@@ -29,6 +32,7 @@ const DropdownUser: React.FC = () => {
       key: '2',
       label: 'Profile',
       extra: '⌘P',
+      onClick: handleProfile,
     },
     {
       key: '3',
