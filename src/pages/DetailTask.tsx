@@ -6,11 +6,14 @@ import {
   ClockIcon, 
   FlagIcon, 
   ArrowLeftIcon,
-  CheckCircleIcon 
+  CheckCircleIcon,
+  UsersIcon 
 } from 'lucide-react';
-import { Spin, message } from 'antd';
+import { Spin, message, Button } from 'antd';
+import { UserAddOutlined } from '@ant-design/icons';
 import { formatDate } from '@/lib/utils';
-
+import InviteCollaboratorModal from '@/components/tasks/InviteCollaboratorModal';
+import InviteList from '@/components/tasks/InviteList';
 import type { Task } from '@/types/task';
 
 export default function DetailTask() {
@@ -19,6 +22,7 @@ export default function DetailTask() {
   const { getTaskById } = useTaskStore();
   const [task, setTask] = useState<Task | null>(null);
   const [loading, setLoading] = useState(true);
+  const [isInviteModalOpen, setIsInviteModalOpen] = useState(false);
 
   useEffect(() => {
     const loadTask = async () => {
@@ -92,14 +96,24 @@ export default function DetailTask() {
   return (
     <div className="min-h-screen bg-gray-50 py-8">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Back Button */}
-        <button
-          onClick={() => navigate('/tugas')}
-          className="flex items-center text-gray-600 hover:text-gray-900 mb-6 transition-colors"
-        >
-          <ArrowLeftIcon className="w-5 h-5 mr-2" />
-          Kembali ke Daftar Tugas
-        </button>
+        {/* Back Button and Actions */}
+        <div className="flex justify-between items-center mb-6">
+          <button
+            onClick={() => navigate('/tugas')}
+            className="flex items-center text-gray-600 hover:text-gray-900 transition-colors"
+          >
+            <ArrowLeftIcon className="w-5 h-5 mr-2" />
+            Kembali ke Daftar Tugas
+          </button>
+
+          <Button
+            type="primary"
+            icon={<UserAddOutlined />}
+            onClick={() => setIsInviteModalOpen(true)}
+          >
+            Undang Kolaborator
+          </Button>
+        </div>
 
         {/* Main Content */}
         <div className="bg-white rounded-lg shadow-sm overflow-hidden">
@@ -144,14 +158,29 @@ export default function DetailTask() {
             </div>
 
             {/* Description */}
-            <div className="prose max-w-none">
+            <div className="prose max-w-none mb-8">
               <h3 className="text-lg font-medium text-gray-900 mb-3">Deskripsi</h3>
               <div className="bg-gray-50 rounded-lg p-4">
                 <p className="text-gray-700 whitespace-pre-wrap">{task.deskripsi || 'Tidak ada deskripsi'}</p>
               </div>
             </div>
+
+            {/* Collaborators */}
+            <div className="border-t border-gray-200 pt-8">
+              <InviteList taskId={id || ''} />
+            </div>
           </div>
         </div>
+
+        {/* Invite Collaborator Modal */}
+        <InviteCollaboratorModal
+          isOpen={isInviteModalOpen}
+          onClose={() => setIsInviteModalOpen(false)}
+          taskId={id || ''}
+          onInviteSuccess={() => {
+            message.success('Kolaborator berhasil diundang');
+          }}
+        />
       </div>
     </div>
   );
