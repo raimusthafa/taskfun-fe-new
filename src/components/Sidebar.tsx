@@ -7,6 +7,7 @@ import {
   X,
   PanelLeftClose,
   Menu as MenuIcon,
+  ListChecks,
 } from 'lucide-react';
 import { Drawer, Menu, Button, Tooltip } from 'antd';
 import type { MenuProps } from 'antd';
@@ -26,7 +27,7 @@ export function Sidebar({ isOpen, onClose, isDesktopOpen, setIsDesktopOpen }: Si
   const menuItems = [
     { key: '/dashboard', label: 'Dashboard', icon: <LayoutDashboardIcon size={18} /> },
     { key: '/tugas', label: 'Tugas', icon: <CheckSquareIcon size={18} /> },
-    { key: '/category', label: 'Kategori', icon: <CheckSquareIcon size={18} /> },
+    { key: '/category', label: 'Kategori', icon: <ListChecks size={18} /> },
     { key: '/history', label: 'Riwayat', icon: <HistoryIcon size={18} /> },
     { key: '/about', label: 'Tentang', icon: <InfoIcon size={18} /> }
   ];
@@ -73,7 +74,7 @@ export function Sidebar({ isOpen, onClose, isDesktopOpen, setIsDesktopOpen }: Si
               <button
                 onClick={() => setIsDesktopOpen(true)}
                 aria-label="Open sidebar"
-                className="text-blue-600 focus:outline-none z-10"
+                className="text-blue-600 focus:outline-none z-10 cursor-pointer"
                 style={{ position: 'relative' }}
                 
               >
@@ -86,7 +87,7 @@ export function Sidebar({ isOpen, onClose, isDesktopOpen, setIsDesktopOpen }: Si
               <button
                 onClick={() => setIsDesktopOpen(false)}
                 aria-label="Close sidebar"
-                className="text-blue-600 focus:outline-none z-10"
+                className="text-blue-600 focus:outline-none z-10 cursor-pointer"
                 style={{ position: 'relative' }}
               >
                 <PanelLeftClose size={24} />
