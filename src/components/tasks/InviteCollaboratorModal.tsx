@@ -39,7 +39,7 @@ const InviteCollaboratorModal = ({
       onInviteSuccess?.();
       onClose();
     } catch (error: any) {
-      message.error(error || 'Gagal mengirim undangan');
+      message.error(error);
     } finally {
       setIsLoading(false);
     }

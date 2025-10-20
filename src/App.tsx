@@ -3,7 +3,7 @@ import { Dashboard } from './pages/Dashboard';
 import { History } from './pages/History';
 import { About } from './pages/About';
 import Tugas from './pages/Tugas';
-// import LandingPage from './pages/LandingPage';
+import UndanganTugas from './pages/UndanganTugas';
 import { Layout } from './components/Layout';
 import Register from './components/RegisterPage';
 import Login from './components/LoginPage';
@@ -30,6 +30,7 @@ export function App() {
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/tugas" element={<Tugas />} />
             <Route path="/tugas/:id" element={<DetailTask />} />
+            <Route path="/undangan-tugas" element={<UndanganTugas />} />
             <Route path="/category" element={<Category />} />
             <Route path="/history" element={<History />} />
             <Route path="/about" element={<About />} />
