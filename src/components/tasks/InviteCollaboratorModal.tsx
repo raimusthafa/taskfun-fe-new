@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { Modal, Button, Input, message, Select, Radio } from 'antd';
 import useInviteStore from '../../store/useInviteStore';
 import api from '../../lib/api';
@@ -32,17 +32,29 @@ const InviteCollaboratorModal = ({
   const { createInvite } = useInviteStore();
 
   // Debounced search function
-  const searchUsers = debounce(async (query: string) => {
+const searchUsers = useCallback(
+  debounce(async (query: string) => {
     if (!query || query.length < 3) return;
-    
     try {
-      const response = await api.get(`/users/search?q=${encodeURIComponent(query)}`);
+      const response = await api.get(`/users/search?username=${encodeURIComponent(query)}`);
       setSearchResults(response.data);
     } catch (error) {
       console.error('Error searching users:', error);
       setSearchResults([]);
     }
-  }, 300);
+  }, 300),
+  []
+);
+
+useEffect(() => {
+  if (!isOpen) {
+    setSearchInput('');
+    setSearchResults([]);
+    setSelectedUserId(null);
+  }
+}, [isOpen]);
+
+
 
   useEffect(() => {
     if (inviteMethod === 'username' && searchInput.length >= 3) {
