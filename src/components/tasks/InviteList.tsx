@@ -98,7 +98,13 @@ const InviteList = ({ taskId }: InviteListProps) => {
             }
           >
             <List.Item.Meta
-              title={invite.inviteeEmail}
+                            title={
+                <div>
+                  <div style={{ fontWeight: 500 }}>{invite.invitee_email || '-'}</div>
+                  {/* <div style={{ fontSize: 13, color: '#888' }}>{invite.inviteeUsername ? `@${invite.inviteeUsername}` : ''}</div> */}
+                  {/* <div style={{ fontSize: 13 }}>{invite.inviteeEmail}</div> */}
+                </div>
+              }
               description={
                 <Space>
                   Status:{' '}

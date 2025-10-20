@@ -49,6 +49,7 @@ const useInviteStore = create<InviteStore>((set) => ({
     }
   },
 
+
   acceptInvite: async (taskId: string, inviteId: string) => {
     try {
       set({ loading: true, error: null });
