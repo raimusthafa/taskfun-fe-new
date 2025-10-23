@@ -192,9 +192,6 @@ export default function DetailTask() {
 
             {/* Kolaborator */}
             <div className="pt-6 border-t border-gray-100">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                Kolaborator
-              </h3>
               <InviteList taskId={id || ''} />
             </div>
           </div>

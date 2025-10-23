@@ -68,7 +68,7 @@ const InviteList = ({ taskId }: InviteListProps) => {
 
   return (
     <div>
-      <h3 style={{ fontSize: 16, fontWeight: 500, marginBottom: 16 }}>
+      <h3 style={{ fontSize: 16, fontWeight: 500}}>
         Daftar Kolaborator
       </h3>
       <List
@@ -76,26 +76,6 @@ const InviteList = ({ taskId }: InviteListProps) => {
         renderItem={(invite) => (
           <List.Item
             key={invite.id}
-            actions={
-              invite.status === 'pending'
-                ? [
-                    <Button
-                      key="accept"
-                      type="primary"
-                      onClick={() => handleAccept(invite.id)}
-                    >
-                      Terima
-                    </Button>,
-                    <Button
-                      key="reject"
-                      danger
-                      onClick={() => handleReject(invite.id)}
-                    >
-                      Tolak
-                    </Button>,
-                  ]
-                : undefined
-            }
           >
             <List.Item.Meta
                             title={
