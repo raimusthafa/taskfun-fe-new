@@ -12,6 +12,7 @@ import PrivateRoute from './components/PrivateRoute';
 import Category from './pages/Category';
 import LandingPage from './pages/LandingPage';
 import Profile from './pages/Profile';
+import Notifications from './pages/Notifikasi';
 
 export function App() {
 
@@ -27,6 +28,7 @@ export function App() {
         <Route element={<PrivateRoute />}>
           <Route element={<Layout />}>
             <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/notifikasi" element={<Notifications />} />
             <Route path="/tugas" element={<Tugas />} />
             <Route path="/tugas/:id" element={<DetailTask />} />
             {/* <Route path="/undangan-tugas" element={<UndanganTugas />} /> */}
