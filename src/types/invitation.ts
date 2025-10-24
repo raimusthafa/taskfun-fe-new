@@ -9,6 +9,9 @@ export interface Invitation {
   createdAt: string;
   token?: string;
   task: Task;
+  inviter: {
+    username: string;
+  };
 }
 
 export interface CreateInviteRequest {
