@@ -13,11 +13,13 @@ import Category from './pages/Category';
 import LandingPage from './pages/LandingPage';
 import Profile from './pages/Profile';
 import Notifications from './pages/Notifikasi';
+import ShortcutHandler from './Global/Shortcut';
 
 export function App() {
 
   return (
     <Router>
+    <ShortcutHandler/>
       <Routes>
         {/* Public Routes */}
         <Route path="/" element={<LandingPage />} />
