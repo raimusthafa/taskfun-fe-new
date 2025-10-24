@@ -1,10 +1,10 @@
 import { useEffect } from 'react';
-import { Card, Button, Tag, Typography, Spin, Empty, message } from 'antd';
+import { Card, Button, Tag, Typography, Spin, Empty, message, Avatar } from 'antd';
 import { UserOutlined } from '@ant-design/icons';
 import useNotifikasiStore from '../../store/useNotifikasiStore';
 import useInviteStore from '@/store/useInviteStore';
 
-const { Title, Text } = Typography;
+const { Text } = Typography;
 
 const InviteComponent = () => {
   const { invites, loading, listInvitesUser } = useNotifikasiStore();
@@ -40,50 +40,66 @@ const InviteComponent = () => {
   };
 
   if (loading) {
-    return <Spin size="large" tip="Memuat..." />;
+    return (
+      <div className="flex justify-center items-center h-40">
+        <Spin size="large" tip="Memuat undangan..." />
+      </div>
+    );
   }
 
   if (invites.length === 0) {
     return (
-      <div className="">
-        <Empty description="Belum ada undangan" />
+      <div className="flex justify-center py-10">
+        <Empty
+          description={
+            <span className="text-gray-500">
+              Kamu belum memiliki undangan saat ini ✨
+            </span>
+          }
+        />
       </div>
     );
   }
 
   return (
-    <div className="">
-
+    <div className="space-y-3">
       {invites.map((invite) => (
         <Card
           key={invite.id}
-          className="mb-4 shadow-sm border border-gray-200 hover:shadow-md transition-all duration-200"
+          className="rounded-xl border border-gray-200 shadow-sm hover:shadow transition-all duration-200"
         >
-          <div className="flex justify-between items-center">
-            {/* Kiri: Detail undangan */}
-            <div>
-              <Text strong className="text-lg block">
-                {invite.task.tugas}
-              </Text>
-              <div className="flex items-center gap-1 text-gray-500 mt-1">
-                <Text className="text-sm">Dari {invite.inviter.username}</Text>
+          <div className="flex justify-between items-center gap-3">
+
+            {/* Left */}
+            <div className="flex items-start gap-3">
+              <Avatar size={42} icon={<UserOutlined />} />
+              <div>
+                <Text strong className="text-[15px] block">
+                  {invite.task.tugas}
+                </Text>
+
+                <Text type="secondary" className="text-sm">
+                  Diundang oleh <span className="font-medium">{invite.inviter.username}</span>
+                </Text>
               </div>
             </div>
 
-            {/* Kanan: Status / Aksi */}
-            <div className="text-right">
+            {/* Right */}
+            <div>
               {invite.status === 'pending' && (
                 <div className="flex gap-2">
                   <Button
                     type="primary"
-                    size="small"
+                    size="middle"
+                    className="rounded-lg"
                     onClick={() => handleAccept(invite.id, invite.taskId)}
                   >
                     Terima
                   </Button>
                   <Button
+                    size="middle"
                     danger
-                    size="small"
+                    className="rounded-lg"
                     onClick={() => handleReject(invite.id, invite.taskId)}
                   >
                     Tolak
@@ -92,17 +108,18 @@ const InviteComponent = () => {
               )}
 
               {invite.status === 'accepted' && (
-                <Tag color="green" className="text-sm">
+                <Tag color="green" className="rounded-md px-3 py-1">
                   Diterima
                 </Tag>
               )}
 
               {invite.status === 'rejected' && (
-                <Tag color="red" className="text-sm">
+                <Tag color="red" className="rounded-md px-3 py-1">
                   Ditolak
                 </Tag>
               )}
             </div>
+
           </div>
         </Card>
       ))}
