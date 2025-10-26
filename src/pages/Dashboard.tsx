@@ -25,18 +25,26 @@ export function Dashboard() {
         <div className="bg-white rounded-lg p-6 shadow-sm">
           <h3 className="text-lg font-semibold mb-4">Tugas Prioritas Tinggi</h3>
           <div className="space-y-3">
-            {highTasks.map(item => <div className="flex items-center justify-between p-3 border border-gray-100 rounded-lg hover:bg-gray-50">
-                <div>
-                  <h4 className="font-medium">{item.tugas}</h4>
-                  <div className="flex items-center mt-1 text-sm text-gray-500">
-                  <CalendarIcon size={14} className="mr-1" />
-                  <span className="text-sm text-gray-500">{formatRelativeDate(item.tenggat)}</span>
+            {highTasks.length === 0 ? (
+              <div className="text-center py-8 text-gray-500">
+                <div className="text-4xl mb-4 mt-10">⚡</div>
+                <h3 className="text-lg font-medium mb-2">Tidak ada tugas prioritas tinggi</h3>
+                <p className="text-sm">Semua tugas Anda dalam kondisi baik.</p>
+              </div>
+            ) : (
+              highTasks.map(item => <div className="flex items-center justify-between p-3 border border-gray-100 rounded-lg hover:bg-gray-50">
+                  <div>
+                    <h4 className="font-medium">{item.tugas}</h4>
+                    <div className="flex items-center mt-1 text-sm text-gray-500">
+                    <CalendarIcon size={14} className="mr-1" />
+                    <span className="text-sm text-gray-500">{formatRelativeDate(item.tenggat)}</span>
+                    </div>
                   </div>
-                </div>
-                <div className="bg-red-100 text-red-800 text-xs px-2 py-1 rounded">
-                  {item.prioritas}
-                </div>
-              </div>)}
+                  <div className="bg-red-100 text-red-800 text-xs px-2 py-1 rounded">
+                    {item.prioritas}
+                  </div>
+                </div>)
+            )}
           </div>
         </div>
       </div>
