@@ -10,6 +10,11 @@ const ShortcutHandler = () => {
     navigate("/profile");
   });
 
+  useHotkeys("mod+l", (e) => {
+    e.preventDefault();
+    navigate("/notifikasi");
+  });
+
   return null;
 };
 
