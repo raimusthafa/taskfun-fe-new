@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import api from '../lib/api';
+import type { UpdateUser } from '@/types/user';
 
 interface User {
   id_user: string;
@@ -19,6 +20,7 @@ interface UserState {
   login: (identifier: string, password: string) => Promise<void>;
   logout: () => void;
   getProfile: () => Promise<void>;
+  updateUser: (id: string, updates: Partial<UpdateUser>) => Promise<void>;
   setError: (msg: string | null) => void;        // ✅ Tambahkan ini
   setSuccess: (msg: string | null) => void;      // ✅ Tambahkan ini
 }
@@ -80,6 +82,26 @@ register: async (username, fullname, email, password) => {
       set({ error: error.response?.data?.error || error.message, loading: false });
     }
   },
+
+    updateUser: async (id, updates) => {
+    set({ loading: true, error: null, success: null });
+    try {
+      const response = await api.put(`/users/${id}`, updates);
+      set({
+        user: response.data,
+        loading: false,
+        success: response.data.message || "User updated successfully",
+      });
+    } catch (error: any) {
+      set({
+        loading: false,
+        success: null,
+        error: error.response?.data?.error || "Gagal update user",
+      });
+    }
+  },
+
+
     setError: (msg) => set({ error: msg }),
   setSuccess: (msg) => set({ success: msg }),
 }));
