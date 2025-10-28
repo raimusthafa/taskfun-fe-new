@@ -5,6 +5,7 @@ import { Highlighter } from '@/components/ui/highlighter';
 import { RainbowButton } from '@/components/ui/rainbow-button';
 import { BackgroundLines } from '@/components/ui/background-lines';
 import Navbar from '@/components/Navbar';
+import LandingPage2 from './lp2';
 
 const { Content, Footer } = Layout;
 const { Title, Paragraph } = Typography;
@@ -73,6 +74,44 @@ const LandingPage = () => {
         </Link>
         </div>
         </BackgroundLines>
+              <Content className="bg-gradient-to-b from-blue-50 to-white pt-24 pb-32 text-center">
+        <Row justify="center" align="middle" gutter={[64, 32]}>
+          <Col xs={24} md={10}>
+            <Title level={1} style={{ fontWeight: 700, fontSize: "3rem" }}>
+              Kelola Tugasmu dengan Lebih Mudah bersama{" "}
+              <span style={{ color: "#1677ff" }}>TaskFun</span>
+            </Title>
+            <Paragraph
+              style={{
+                fontSize: 17,
+                color: "#555",
+                margin: "20px auto",
+                maxWidth: 500,
+              }}
+            >
+              Tingkatkan produktivitasmu, atur proyek, dan berkolaborasi dengan
+              tim menggunakan satu platform yang cepat dan intuitif.
+            </Paragraph>
+            <Link to="/register">
+              <RainbowButton>
+                Mulai Sekarang <ArrowRightOutlined />
+              </RainbowButton>
+            </Link>
+          </Col>
+
+          <Col xs={24} md={10}>
+            <img
+              src="/ss/dashboardfix.jpg"
+              alt="Dashboard Preview"
+              style={{
+                width: "100%",
+                borderRadius: 20,
+                boxShadow: "0 8px 24px rgba(0,0,0,0.1)",
+              }}
+            />
+          </Col>
+        </Row>
+      </Content>
 
 {/* feature section */}
  <div style={{ marginTop: 100, marginBottom: 100 }}>
@@ -233,6 +272,7 @@ const LandingPage = () => {
       <Footer style={{ textAlign: 'center' }}>
         © 2025 TaskFun — Dibuat dengan ❤️ oleh emkaaaa
       </Footer>
+      {/* <LandingPage2/> */}
     </Layout>
   );
 };
