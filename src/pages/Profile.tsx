@@ -85,21 +85,6 @@ const Profile = () => {
         className="max-w-3xl mx-auto"
       >
         <div className="bg-white rounded-2xl shadow-xl overflow-hidden">
-
-          {/* Profile Header */}
-{/* <div className="relative">
-  <img
-    src={profileData.profilepic || user?.profilepic || "https://via.placeholder.com/150"}
-    alt="Profile"
-    className="w-32 h-32 rounded-full border-4 border-white object-cover"
-  />
-
-  <label className="absolute bottom-0 right-0 bg-blue-500 p-2 rounded-full text-white hover:bg-blue-600 cursor-pointer">
-    <Camera size={20} />
-    <input type="file" accept="image/*" className="hidden" onChange={handleImageChange} />
-  </label>
-</div> */}
-
           <div className="relative h-48 bg-gradient-to-r from-blue-500 to-purple-600">
             <div className="absolute -bottom-16 left-1/2 transform -translate-x-1/2">
               <div className="relative">
