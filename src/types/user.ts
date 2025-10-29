@@ -3,6 +3,6 @@ export interface UpdateUser {
   username: string;
   fullname: string;
   email: string;
-  profilepic: string;
+  profilepic: string | File;
   password: string;
 }

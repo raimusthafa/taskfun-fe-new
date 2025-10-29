@@ -86,18 +86,33 @@ register: async (username, fullname, email, password) => {
     updateUser: async (id, updates) => {
     set({ loading: true, error: null, success: null });
     try {
-      const response = await api.put(`/users/${id}`, updates);
+      const formData = new FormData();
+      
+      Object.entries(updates).forEach(([key, value]) => {
+        if (value !== undefined && value !== null) {
+          if (value instanceof File) {
+            formData.append(key, value);
+          } else {
+            formData.append(key, String(value));
+          }
+        }
+      });
+
+      const response = await api.put(`/users/${id}`, formData);
+      
       set({
         user: response.data,
         loading: false,
         success: response.data.message || "User updated successfully",
       });
     } catch (error: any) {
+      const errorMsg = error.response?.data?.error || error.message || "Gagal update user";
       set({
         loading: false,
         success: null,
-        error: error.response?.data?.error || "Gagal update user",
+        error: errorMsg,
       });
+      throw error;
     }
   },
 
