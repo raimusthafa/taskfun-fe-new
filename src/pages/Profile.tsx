@@ -5,14 +5,15 @@ import { Camera, Edit2, Save, X } from 'lucide-react';
 import { message } from 'antd';
 
 const Profile = () => {
-  const { user, loading, updateUser } = useUserStore();
+  const { user, loading, error, updateUser, getProfile } = useUserStore();
   const [isEditing, setIsEditing] = useState(false);
   const [profileData, setProfileData] = useState({
     fullname: user?.fullname || '',
     email: user?.email || '',
     username: user?.username || '',
-    profilepic: user?.profilepic || '',
   });
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
 
   useEffect(() => {
     if (user) {
@@ -20,7 +21,6 @@ const Profile = () => {
         fullname: user.fullname,
         email: user.email,
         username: user.username,
-        profilepic: user.profilepic,
       });
     }
   }, [user]);
@@ -34,38 +34,49 @@ const Profile = () => {
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
-    try {
     e.preventDefault();
     if (!user) return;
 
-    await updateUser(user.id_user, {
-      fullname: profileData.fullname,
-      email: profileData.email,
-      username: profileData.username,
-      profilepic: profileData.profilepic,
-      password: "" // ❗ Kalau tidak mau ganti password, kosongkan
-    });
-    message.success('Profile berhasil diupdate!');
-  } catch (error) {
-    message.error('Gagal update profile');
-  }
+    try {
+      const updates: any = {
+        fullname: profileData.fullname,
+        email: profileData.email,
+        username: profileData.username,
+      };
 
-    setIsEditing(false);
+      if (selectedFile) {
+        updates.profilepic = selectedFile;
+      }
+
+      await updateUser(user.id_user, updates);
+      
+      if (error) {
+        message.error(error);
+        return;
+      }
+      
+      await getProfile();
+      message.success('Profile berhasil diupdate!');
+      setIsEditing(false);
+      setSelectedFile(null);
+      setPreviewUrl(null);
+    } catch (err: any) {
+      message.error(err.response?.data?.error || error || 'Gagal update profile');
+    }
   };
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-  const file = e.target.files?.[0];
-  if (!file) return;
+    const file = e.target.files?.[0];
+    if (!file) return;
 
-  const reader = new FileReader();
-  reader.onloadend = () => {
-    setProfileData(prev => ({
-      ...prev,
-      profilepic: reader.result as string  // base64 string
-    }));
+    setSelectedFile(file);
+    
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setPreviewUrl(reader.result as string);
+    };
+    reader.readAsDataURL(file);
   };
-  reader.readAsDataURL(file);
-};
 
 
   if (loading) {
@@ -89,10 +100,14 @@ const Profile = () => {
             <div className="absolute -bottom-16 left-1/2 transform -translate-x-1/2">
               <div className="relative">
                 <img
-                  src={user?.profilepic || 'https://via.placeholder.com/150'}
+                  src={
+                    previewUrl ||
+                    (user?.profilepic ? `http://localhost:8080${user.profilepic}` : 'https://via.placeholder.com/150')
+                  }
                   alt="Profile"
                   className="w-32 h-32 rounded-full border-4 border-white object-cover"
                 />
+
                 <label className="absolute bottom-0 right-0 bg-blue-500 p-2 rounded-full text-white hover:bg-blue-600 transition-colors">
                   <Camera size={20} />
                   <input type="file" accept="image/*" className="hidden" onChange={handleImageChange} />

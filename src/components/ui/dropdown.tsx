@@ -58,8 +58,14 @@ const DropdownUser: React.FC = () => {
     <Dropdown menu={{ items }} placement="bottomRight">
       <a onClick={(e) => e.preventDefault()}>
         <Space>
-          <div className="cursor-pointer w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center text-white">
-            <UserIcon size={16} />
+          <div>
+              <img
+                  src={
+                    (user?.profilepic ? `http://localhost:8080${user.profilepic}` : 'https://via.placeholder.com/150')
+                  }
+                  alt="Profile"
+                  className="cursor-pointer w-8 h-8 rounded-full flex items-center justify-center"
+                />
           </div>
           <span className="cursor-pointer font-medium text-gray-700">{user?.username || 'Pengguna'}</span>
         </Space>
