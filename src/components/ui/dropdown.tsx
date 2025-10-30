@@ -2,7 +2,6 @@ import React from 'react';
 import { SettingOutlined, LogoutOutlined } from '@ant-design/icons';
 import type { MenuProps } from 'antd';
 import { Dropdown, Space } from 'antd';
-import { UserIcon } from 'lucide-react';
 import { useUserStore } from '../../store/useUserStore';
 import { useNavigate } from 'react-router-dom';
 
