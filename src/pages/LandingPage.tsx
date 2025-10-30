@@ -83,7 +83,7 @@ const LandingPage = () => {
       <Row gutter={[32, 32]} justify="center" className="mt-12">
         {[
           {
-            icon: "🔶",
+            icon: "🌟",
             desc: "Ensure your team is always on the same page with task-sharing and transparent updates.",
           },
           {
