@@ -5,12 +5,12 @@ const ShortcutHandler = () => {
   const navigate = useNavigate();
 
   // "mod+k" = ctrl+k di Windows / command+k di Mac
-  useHotkeys("mod+p", (e) => {
+  useHotkeys("mod+p", (e: KeyboardEvent) => {
     e.preventDefault();
     navigate("/profile");
   });
 
-  useHotkeys("mod+l", (e) => {
+  useHotkeys("mod+l", (e: KeyboardEvent) => {
     e.preventDefault();
     navigate("/notifikasi");
   });
