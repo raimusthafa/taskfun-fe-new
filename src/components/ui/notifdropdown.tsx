@@ -1,4 +1,4 @@
-import { BellOutlined, CheckOutlined, CloseOutlined } from '@ant-design/icons';
+import { CheckOutlined, CloseOutlined } from '@ant-design/icons';
 import { Badge, Dropdown, List, Button } from 'antd';
 import type { MenuProps } from 'antd';
 import { BellIcon } from 'lucide-react';

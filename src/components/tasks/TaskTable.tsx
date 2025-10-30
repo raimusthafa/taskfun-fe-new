@@ -4,10 +4,10 @@ import { formatDate } from '@/lib/utils';
 import { Link } from 'react-router-dom';
 import { Dropdown, Modal, Space, message, Form, Input, DatePicker, Select, type MenuProps } from 'antd';
 import { EditOutlined, DeleteOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import dayjs from 'dayjs';
 
-import type { Task, TaskFormData } from '@/types/task';
+import type { TaskFormData } from '@/types/task';
 
 export function TaskTable() {
   const { tasks, deleteTask, updateTask } = useTaskStore();
