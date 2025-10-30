@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { List, Button, Tag, Space, Empty, Spin, message } from 'antd';
+import { List, Tag, Space, Empty, Spin, message } from 'antd';
 import useInviteStore from '../../store/useInviteStore';
 
 interface InviteListProps {
@@ -20,7 +20,7 @@ const getStatusText = (status: string) => {
 };
 
 const InviteList = ({ taskId }: InviteListProps) => {
-  const { invites, loading, listInvites, acceptInvite, rejectInvite } = useInviteStore();
+  const { invites, loading, listInvites } = useInviteStore();
 
   useEffect(() => {
     const loadInvites = async () => {
@@ -48,23 +48,23 @@ const InviteList = ({ taskId }: InviteListProps) => {
     );
   }
 
-  const handleAccept = async (inviteId: string) => {
-    try {
-      await acceptInvite(taskId, inviteId);
-      message.success('Undangan diterima');
-    } catch (error: any) {
-      message.error(error || 'Gagal menerima undangan');
-    }
-  };
+  // const handleAccept = async (inviteId: string) => {
+  //   try {
+  //     await acceptInvite(taskId, inviteId);
+  //     message.success('Undangan diterima');
+  //   } catch (error: any) {
+  //     message.error(error || 'Gagal menerima undangan');
+  //   }
+  // };
 
-  const handleReject = async (inviteId: string) => {
-    try {
-      await rejectInvite(taskId, inviteId);
-      message.success('Undangan ditolak');
-    } catch (error: any) {
-      message.error(error || 'Gagal menolak undangan');
-    }
-  };
+  // const handleReject = async (inviteId: string) => {
+  //   try {
+  //     await rejectInvite(taskId, inviteId);
+  //     message.success('Undangan ditolak');
+  //   } catch (error: any) {
+  //     message.error(error || 'Gagal menolak undangan');
+  //   }
+  // };
 
   return (
     <div>

@@ -1,4 +1,4 @@
-import { BellIcon, SearchIcon, MenuIcon } from 'lucide-react';
+import { SearchIcon, MenuIcon } from 'lucide-react';
 import DropdownUser from './ui/dropdown';
 import NotificationDropdown from './ui/notifdropdown';
 
