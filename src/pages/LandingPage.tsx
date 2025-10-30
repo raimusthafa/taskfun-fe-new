@@ -5,7 +5,6 @@ import { Highlighter } from '@/components/ui/highlighter';
 import { RainbowButton } from '@/components/ui/rainbow-button';
 import { BackgroundLines } from '@/components/ui/background-lines';
 import Navbar from '@/components/Navbar';
-import LandingPage2 from './lp2';
 
 const { Content, Footer } = Layout;
 const { Title, Paragraph } = Typography;
@@ -74,12 +73,58 @@ const LandingPage = () => {
         </Link>
         </div>
         </BackgroundLines>
-              <Content className="bg-gradient-to-b from-blue-50 to-white pt-24 pb-32 text-center">
+ <section className="mt-24 text-center">
+      {/* Judul */}
+      <Title level={2} style={{ fontSize: "2.5rem", lineHeight: "1.2" }}>
+        Solve your team's <br /> biggest challenges
+      </Title>
+
+      {/* 3 kolom di bawah judul */}
+      <Row gutter={[32, 32]} justify="center" className="mt-12">
+        {[
+          {
+            icon: "🔶",
+            desc: "Ensure your team is always on the same page with task-sharing and transparent updates.",
+          },
+          {
+            icon: "📝",
+            desc: "Prioritize and manage tasks effectively so your team can focus on what matters most.",
+          },
+          {
+            icon: "👥",
+            desc: "Hold everyone accountable without the need for constant check-ins.",
+          },
+        ].map((item, index) => (
+          <Col xs={24} sm={12} md={6} key={index}>
+            <div className="flex flex-col text-left ml-10">
+              <div className="text-3xl text-amber-500 mb-3">{item.icon}</div>
+              <Paragraph style={{ color: "#333", fontSize: 15, maxWidth: 260 }}>
+                {item.desc}
+              </Paragraph>
+            </div>
+          </Col>
+        ))}
+      </Row>
+
+      {/* Gambar Dashboard Demo */}
+      <div className="relative mt-2 flex justify-center">
+        <img
+          src="/ss/landingpage.png" // ganti dengan path ss dashboard kamu
+          alt="Dashboard Demo"
+          className="w-full max-w-5xl rounded-t-2xl shadow-lg border border-gray-100"
+          loading="lazy"
+        />
+        {/* Efek background biru */}
+        <div className="absolute inset-0 -z-10 bg-gradient-to-b from-blue-400/30 to-transparent rounded-3xl blur-2xl"></div>
+      </div>
+    </section>
+
+    <section className="mt-16 text-center p-6">
         <Row justify="center" align="middle" gutter={[64, 32]}>
           <Col xs={24} md={10}>
-            <Title level={1} style={{ fontWeight: 700, fontSize: "3rem" }}>
-              Kelola Tugasmu dengan Lebih Mudah bersama{" "}
-              <span style={{ color: "#1677ff" }}>TaskFun</span>
+            <Title level={1} style={{ fontWeight: 700, fontSize: "2rem" }}>
+              See your tasks <br /> come to life in the{" "}
+              <span style={{ color: "#1677ff" }}>Calendar</span>
             </Title>
             <Paragraph
               style={{
@@ -89,19 +134,18 @@ const LandingPage = () => {
                 maxWidth: 500,
               }}
             >
-              Tingkatkan produktivitasmu, atur proyek, dan berkolaborasi dengan
-              tim menggunakan satu platform yang cepat dan intuitif.
+             Manage your schedule in a simple, visual way — track what's ahead and plan smarter every day.
             </Paragraph>
-            <Link to="/register">
+            {/* <Link to="/register">
               <RainbowButton>
                 Mulai Sekarang <ArrowRightOutlined />
               </RainbowButton>
-            </Link>
+            </Link> */}
           </Col>
 
           <Col xs={24} md={10}>
             <img
-              src="/ss/dashboardfix.jpg"
+              src="/ss/kalender.jpg"
               alt="Dashboard Preview"
               style={{
                 width: "100%",
@@ -111,7 +155,7 @@ const LandingPage = () => {
             />
           </Col>
         </Row>
-      </Content>
+      </section>
 
 {/* feature section */}
  <div style={{ marginTop: 100, marginBottom: 100 }}>
