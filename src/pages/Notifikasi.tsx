@@ -1,5 +1,4 @@
-import { Card, Button, Tag, Typography } from "antd";
-import { UserOutlined } from "@ant-design/icons";
+import { Typography } from "antd";
 import InviteComponent from "@/components/notifikasi/invite";
 
 const { Title } = Typography;
