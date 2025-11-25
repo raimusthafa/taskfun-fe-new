@@ -12,11 +12,11 @@ interface CategoryState {
   success: string | null;
   error: string | null;
   fetchCategories: () => Promise<void>;
-  createCategory: (category: string, id_user: number) => Promise<void>;
+  createCategory: (category: string) => Promise<void>;
   updateCategory: (id: number, updates: Partial<Category>) => Promise<void>;
   deleteCategory: (id: number) => Promise<void>;
-  setError: (msg: string | null) => void;        // ✅ Tambahkan ini
-  setSuccess: (msg: string | null) => void;      // ✅ Tambahkan ini
+  setError: (msg: string | null) => void;
+  setSuccess: (msg: string | null) => void;
 }
 
 export const useCategoryStore = create<CategoryState>((set) => ({
@@ -35,13 +35,13 @@ export const useCategoryStore = create<CategoryState>((set) => ({
     }
   },
 
-  createCategory: async (category, id_user) => {
+  createCategory: async (category) => {
     set({ loading: true, error: null });
     try {
-      console.log('POST /categories payload:', { category, id_user });
-      const response = await api.post('/categories', { category, id_user });
+      console.log('POST /categories payload:', { category });
+      const response = await api.post('/categories', { category });
       set((state) => ({
-        categories: [...state.categories, response.data],
+        categories: [...state.categories, response.data.category],
         loading: false,
         success: response.data.message || "Category created successfully",
       }));
