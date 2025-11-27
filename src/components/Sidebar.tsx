@@ -8,6 +8,7 @@ import {
   PanelLeftClose,
   Menu as MenuIcon,
   ListChecks,
+  LayoutGridIcon,
 } from 'lucide-react';
 import { Drawer, Menu, Button, Tooltip } from 'antd';
 import type { MenuProps } from 'antd';
@@ -27,7 +28,7 @@ export function Sidebar({ isOpen, onClose, isDesktopOpen, setIsDesktopOpen }: Si
   const menuItems = [
     { key: '/dashboard', label: 'Dashboard', icon: <LayoutDashboardIcon size={18} /> },
     { key: '/tugas', label: 'Tugas', icon: <CheckSquareIcon size={18} /> },
-    // { key: '/undangan-tugas', label: 'Undangan Tugas', icon: <CheckSquareIcon size={18} /> },
+    { key: '/boards', label: 'Boards', icon: <LayoutGridIcon size={18} /> },
     { key: '/category', label: 'Kategori', icon: <ListChecks size={18} /> },
     { key: '/history', label: 'Riwayat', icon: <HistoryIcon size={18} /> },
     { key: '/about', label: 'Tentang', icon: <InfoIcon size={18} /> }
