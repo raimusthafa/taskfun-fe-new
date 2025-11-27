@@ -14,6 +14,8 @@ import LandingPage from './pages/LandingPage';
 import Profile from './pages/Profile';
 import Notifications from './pages/Notifikasi';
 import ShortcutHandler from './Global/Shortcut';
+import Boards from './pages/Boards';
+import BoardDetail from './pages/BoardDetail';
 
 export function App() {
 
@@ -33,7 +35,8 @@ export function App() {
             <Route path="/notifikasi" element={<Notifications />} />
             <Route path="/tugas" element={<Tugas />} />
             <Route path="/tugas/:id" element={<DetailTask />} />
-            {/* <Route path="/undangan-tugas" element={<UndanganTugas />} /> */}
+            <Route path="/boards" element={<Boards />} />
+            <Route path="/boards/:id" element={<BoardDetail />} />
             <Route path="/category" element={<Category />} />
             <Route path="/history" element={<History />} />
             <Route path="/about" element={<About />} />
