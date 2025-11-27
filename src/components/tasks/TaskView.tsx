@@ -36,7 +36,7 @@ export function TaskView() {
         prioritas: values.prioritas,
         tenggat: values.tenggat,
         status: values.status,
-        id_user: user ? parseInt(user.id_user) : 1,
+        id_user: user ? parseInt(user.id_user || String(user.id)) : 1,
         id_category: categoryId
       };
 
