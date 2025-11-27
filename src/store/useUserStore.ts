@@ -3,7 +3,8 @@ import api from '../lib/api';
 import type { UpdateUser } from '@/types/user';
 
 interface User {
-  id_user: string;
+  id: number;
+  id_user?: string;
   username: string;
   fullname: string;
   email: string;
@@ -12,6 +13,7 @@ interface User {
 
 interface UserState {
   user: User | null;
+  users: User[];
   token: string | null;
   loading: boolean;
   error: string | null;
@@ -20,13 +22,15 @@ interface UserState {
   login: (identifier: string, password: string) => Promise<void>;
   logout: () => void;
   getProfile: () => Promise<void>;
+  fetchUsers: () => Promise<void>;
   updateUser: (id: string, updates: Partial<UpdateUser>) => Promise<void>;
-  setError: (msg: string | null) => void;        // ✅ Tambahkan ini
-  setSuccess: (msg: string | null) => void;      // ✅ Tambahkan ini
+  setError: (msg: string | null) => void;
+  setSuccess: (msg: string | null) => void;
 }
 
 export const useUserStore = create<UserState>((set) => ({
   user: null,
+  users: [],
   token: localStorage.getItem('token'),
   loading: false,
   error: null,
@@ -78,6 +82,16 @@ register: async (username, fullname, email, password) => {
     try {
       const response = await api.get('/me');
       set({ user: response.data, loading: false });
+    } catch (error: any) {
+      set({ error: error.response?.data?.error || error.message, loading: false });
+    }
+  },
+
+  fetchUsers: async () => {
+    set({ loading: true, error: null });
+    try {
+      const response = await api.get('/users');
+      set({ users: response.data, loading: false });
     } catch (error: any) {
       set({ error: error.response?.data?.error || error.message, loading: false });
     }

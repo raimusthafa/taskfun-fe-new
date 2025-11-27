@@ -48,7 +48,7 @@ const Profile = () => {
         updates.profilepic = selectedFile;
       }
 
-      await updateUser(user.id_user, updates);
+      await updateUser(user.id_user || String(user.id), updates);
       
       if (error) {
         message.error(error);

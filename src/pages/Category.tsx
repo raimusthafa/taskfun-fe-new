@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { Table, Tooltip, Modal, Input, Button, Space, message, Popconfirm } from 'antd';
 import { EditOutlined, DeleteOutlined, PlusOutlined, CheckCircleTwoTone, CloseCircleOutlined } from '@ant-design/icons';
 import { useCategoryStore } from '../store/useCategoryStore';
-import { useUserStore } from '../store/useUserStore';
 
 interface Category {
   id_category: number;
@@ -11,14 +10,13 @@ interface Category {
 
 const CategoryPage: React.FC = () => {
   const { categories, fetchCategories, createCategory, updateCategory, deleteCategory, loading, error, success } = useCategoryStore();
-  const user = useUserStore((state) => state.user);
   const [isCreateModalVisible, setIsCreateModalVisible] = useState(false);
   const [isEditModalVisible, setIsEditModalVisible] = useState(false);
   const [editingCategory, setEditingCategory] = useState<Category | null>(null);
   const [createFormData, setCreateFormData] = useState({ category: '' });
   const [editFormData, setEditFormData] = useState({ category: '' });
   const setSuccess = useCategoryStore((state) => state.setSuccess);
-  const setError = useUserStore((state) => state.setError);
+  const setError = useCategoryStore((state) => state.setError);
 
   useEffect(() => {
     fetchCategories();
@@ -87,19 +85,7 @@ const handleCreateOk = async () => {
   }
 
   try {
-    if (!user || !user.id_user) {
-      message.error('User not logged in');
-      return;
-    }
-
-    const userId = parseInt(user.id_user, 10); // ⬅️ pastikan integer
-
-    if (isNaN(userId)) {
-      message.error('Invalid user ID');
-      return;
-    }
-
-    await createCategory(createFormData.category, userId);
+    await createCategory(createFormData.category);
     await fetchCategories();
     setIsCreateModalVisible(false);
   } catch {
@@ -202,7 +188,7 @@ const handleCreateOk = async () => {
       />
       <Modal
         title="Add Category"
-        visible={isCreateModalVisible}
+        open={isCreateModalVisible}
         onOk={handleCreateOk}
         onCancel={handleCreateCancel}
         okText="Add"
@@ -220,7 +206,7 @@ const handleCreateOk = async () => {
       </Modal>
       <Modal
         title="Edit Category"
-        visible={isEditModalVisible}
+        open={isEditModalVisible}
         onOk={handleEditOk}
         onCancel={handleEditCancel}
         okText="Update"
