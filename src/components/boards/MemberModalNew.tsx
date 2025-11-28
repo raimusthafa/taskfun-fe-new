@@ -1,7 +1,8 @@
 import { useState, useEffect, useCallback } from 'react';
-import { Modal, List, Avatar, Tag, Button, Select, Radio, message } from 'antd';
-import { CrownOutlined, UserAddOutlined } from '@ant-design/icons';
+import { Modal, List, Avatar, Tag, Button, Select, message, Segmented, Tooltip, Popconfirm } from 'antd';
+import { CrownOutlined, UserAddOutlined, MailOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons';
 import { useBoardStore } from '@/store/useBoardStore';
+import { useUserStore } from '@/store/useUserStore';
 import api from '@/lib/api';
 import debounce from 'lodash/debounce';
 import type { BoardMember } from '@/types/board';
@@ -22,13 +23,28 @@ interface UserSearchResult {
 }
 
 export default function MemberModal({ open, onClose, boardId, members, onMemberAdded }: MemberModalProps) {
-  const { addMember, loading } = useBoardStore();
+  const { addMember, sendInvitation, removeMember, updateMemberRole, currentBoard, loading } = useBoardStore();
+  const { user } = useUserStore();
   const [showAddForm, setShowAddForm] = useState(false);
+  const [addMode, setAddMode] = useState<'invite' | 'direct'>('invite');
   const [searchInput, setSearchInput] = useState('');
   const [searchResults, setSearchResults] = useState<UserSearchResult[]>([]);
   const [selectedUserId, setSelectedUserId] = useState<string | null>(null);
   const [selectedRole, setSelectedRole] = useState<'admin' | 'member'>('member');
   const [searching, setSearching] = useState(false);
+
+  // Edit Role State
+  const [editMemberModalOpen, setEditMemberModalOpen] = useState(false);
+  const [editingMember, setEditingMember] = useState<BoardMember | null>(null);
+  const [newRole, setNewRole] = useState<'admin' | 'member'>('member');
+
+  // Fix: Backend returns id_user, not id. Handle both just in case.
+  // Cast to number because interface might say string but runtime is number, or vice versa.
+  const currentUserId = user?.id_user ? Number(user.id_user) : (user?.id ? Number(user.id) : undefined);
+
+  const currentUserMember = members.find(m => m.id_user === currentUserId);
+  const isAdmin = currentUserMember?.role === 'admin';
+  const ownerId = currentBoard?.board.id_user;
 
   // Debounced search function
   const searchUsers = useCallback(
@@ -69,6 +85,38 @@ export default function MemberModal({ open, onClose, boardId, members, onMemberA
     }
   }, [searchInput, searchUsers]);
 
+  const handleSendInvitation = async () => {
+    if (!selectedUserId) {
+      message.warning('Pilih user terlebih dahulu');
+      return;
+    }
+
+    const isAlreadyMember = members.some((member) => member.id_user === parseInt(selectedUserId));
+    if (isAlreadyMember) {
+      message.warning('User sudah menjadi member board ini');
+      return;
+    }
+
+    // Get selected user info
+    const selectedUser = searchResults.find(u => u.id_user.toString() === selectedUserId);
+    const userName = selectedUser?.fullname || selectedUser?.username || 'User';
+
+    try {
+      await sendInvitation(boardId, { invitee_id: parseInt(selectedUserId), role: selectedRole });
+      message.success(`Invitation berhasil dikirim ke ${userName} sebagai ${selectedRole === 'admin' ? 'Admin' : 'Member'}!`);
+      setSelectedUserId(null);
+      setSearchInput('');
+      setSearchResults([]);
+      setSelectedRole('member');
+      setShowAddForm(false);
+      if (onMemberAdded) {
+        onMemberAdded();
+      }
+    } catch (error: any) {
+      message.error(error.response?.data?.error || 'Gagal mengirim invitation');
+    }
+  };
+
   const handleAddMember = async () => {
     if (!selectedUserId) {
       message.warning('Pilih user terlebih dahulu');
@@ -83,7 +131,7 @@ export default function MemberModal({ open, onClose, boardId, members, onMemberA
 
     try {
       await addMember(boardId, { id_user: parseInt(selectedUserId), role: selectedRole });
-      message.success('Member berhasil ditambahkan');
+      message.success('Member berhasil ditambahkan langsung');
       setSelectedUserId(null);
       setSearchInput('');
       setSearchResults([]);
@@ -102,6 +150,35 @@ export default function MemberModal({ open, onClose, boardId, members, onMemberA
     setSelectedUserId(null);
   };
 
+  const handleRemoveMember = async (memberId: number) => {
+    try {
+      await removeMember(boardId, memberId);
+      message.success('Member berhasil dihapus');
+      if (onMemberAdded) onMemberAdded();
+    } catch (error: any) {
+      message.error(error.response?.data?.error || 'Gagal menghapus member');
+    }
+  };
+
+  const openEditModal = (member: BoardMember) => {
+    setEditingMember(member);
+    setNewRole(member.role);
+    setEditMemberModalOpen(true);
+  };
+
+  const handleUpdateRole = async () => {
+    if (!editingMember) return;
+    try {
+      await updateMemberRole(boardId, editingMember.id_boardmember, { role: newRole });
+      message.success('Role member berhasil diupdate');
+      setEditMemberModalOpen(false);
+      setEditingMember(null);
+      if (onMemberAdded) onMemberAdded();
+    } catch (error: any) {
+      message.error(error.response?.data?.error || 'Gagal update role member');
+    }
+  };
+
   const handleUserSelect = (userId: string) => {
     console.log('handleUserSelect called:', userId);
     setSelectedUserId(userId);
@@ -111,8 +188,6 @@ export default function MemberModal({ open, onClose, boardId, members, onMemberA
       setSearchInput(user.username);
     }
   };
-
-  // console.log('Render - selectedUserId:', selectedUserId, 'Type:', typeof selectedUserId, 'Button disabled:', !selectedUserId);
 
   return (
     <Modal
@@ -124,19 +199,42 @@ export default function MemberModal({ open, onClose, boardId, members, onMemberA
     >
       <div className="space-y-4">
         <div className="flex justify-between items-end">
-        <h4 className="font-semibold text-sm">Daftar Member ({members.length})</h4>
-        <Button
-          type="primary"
-          icon={<UserAddOutlined />}
-          onClick={() => setShowAddForm(!showAddForm)}
-        >
-          {showAddForm ? 'Tutup Form' : 'Tambah Member'}
-        </Button>
+          <h4 className="font-semibold text-sm">Daftar Member ({members.length})</h4>
+          <Button
+            type="primary"
+            icon={<UserAddOutlined />}
+            onClick={() => setShowAddForm(!showAddForm)}
+          >
+            {showAddForm ? 'Tutup Form' : 'Tambah Member'}
+          </Button>
         </div>
         {/* Add Member Form - Collapse Style */}
         {showAddForm && (
           <div className="p-4 bg-gray-50 rounded-lg border border-gray-200">
-            <h4 className="font-semibold mb-3">Tambah Member Baru</h4>
+            <div className="flex justify-between items-center mb-3">
+              <h4 className="font-semibold">Tambah Member Baru</h4>
+              <Segmented
+                value={addMode}
+                onChange={(value) => setAddMode(value as 'invite' | 'direct')}
+                options={[
+                  { label: 'Send Invitation', value: 'invite', icon: <MailOutlined /> },
+                  { label: 'Direct Add', value: 'direct', icon: <UserAddOutlined /> },
+                ]}
+              />
+            </div>
+
+            {addMode === 'invite' && (
+              <div className="mb-3 p-2 bg-blue-50 border border-blue-200 rounded text-xs text-blue-700">
+                <strong>Mode Invitation:</strong> User akan menerima notifikasi dan harus menyetujui undangan sebelum menjadi member.
+              </div>
+            )}
+
+            {addMode === 'direct' && (
+              <div className="mb-3 p-2 bg-orange-50 border border-orange-200 rounded text-xs text-orange-700">
+                <strong>Mode Direct Add:</strong> User langsung ditambahkan sebagai member tanpa persetujuan.
+              </div>
+            )}
+
             <div className="space-y-3">
               <div>
                 <label className="block text-sm font-medium mb-1">Cari User (Username)</label>
@@ -160,7 +258,7 @@ export default function MemberModal({ open, onClose, boardId, members, onMemberA
                   Cari dan pilih pengguna berdasarkan username untuk menambahkan sebagai member
                 </p>
               </div>
-              
+
               <div>
                 <label className="block text-sm font-medium mb-1">Role</label>
                 <Select
@@ -174,51 +272,115 @@ export default function MemberModal({ open, onClose, boardId, members, onMemberA
                 />
               </div>
 
-              {/* <div className="text-xs text-gray-500 mb-2">
-                Debug: Selected User ID = {selectedUserId || 'null'} | Disabled = {!selectedUserId ? 'true' : 'false'}
-              </div> */}
               <Button
                 type="primary"
-                icon={<UserAddOutlined />}
+                icon={addMode === 'invite' ? <MailOutlined /> : <UserAddOutlined />}
                 disabled={!selectedUserId}
                 loading={loading}
-                onClick={handleAddMember}
+                onClick={addMode === 'invite' ? handleSendInvitation : handleAddMember}
                 block
               >
-                Tambah Member
+                {addMode === 'invite' ? 'Kirim Invitation' : 'Tambah Member Langsung'}
               </Button>
             </div>
           </div>
         )}
 
-        
+
         <List
           dataSource={members}
-          renderItem={(member) => (
-            <List.Item>
-              <List.Item.Meta
-                avatar={
-                  <Avatar style={{ backgroundColor: '#1890ff' }}>
-                    {(member.user?.fullname || 'U').charAt(0).toUpperCase()}
-                  </Avatar>
-                }
-                title={
-                  <div className="flex items-center gap-2">
-                    {member.user?.fullname || `User ${member.id_user}`}
-                    {member.role === 'admin' && (
-                      <Tag icon={<CrownOutlined />} color="gold">
-                        Admin
+          renderItem={(member) => {
+            const isOwner = member.id_user === ownerId;
+            const isSelf = member.id_user === currentUserId;
+            const canEdit = isAdmin && !isOwner; // Admin can edit anyone except owner
+
+            return (
+              <List.Item
+                actions={canEdit ? [
+                  <Tooltip title="Edit Role">
+                    <Button
+                      type="text"
+                      icon={<EditOutlined />}
+                      onClick={() => openEditModal(member)}
+                    />
+                  </Tooltip>,
+                  <Popconfirm
+                    title="Hapus Member"
+                    description="Apakah anda yakin ingin menghapus member ini?"
+                    onConfirm={() => handleRemoveMember(member.id_boardmember)}
+                    okText="Ya"
+                    cancelText="Batal"
+                    disabled={isSelf} // Prevent deleting self via this button (maybe allow leave?)
+                  >
+                    <Button
+                      type="text"
+                      danger
+                      icon={<DeleteOutlined />}
+                      disabled={isSelf}
+                    />
+                  </Popconfirm>
+                ] : []}
+              >
+                <List.Item.Meta
+                  avatar={
+                    <Avatar
+                      size={48}
+                      style={{ backgroundColor: '#1890ff' }}
+                    >
+                      {(member.user?.fullname || 'U').charAt(0).toUpperCase()}
+                    </Avatar>
+                  }
+                  title={
+                    <div className="flex items-center gap-2">
+                      <span className="font-medium text-base">
+                        {member.user?.fullname || `User ${member.id_user}`}
+                      </span>
+                      <Tag
+                        icon={member.role === 'admin' ? <CrownOutlined /> : null}
+                        color={member.role === 'admin' ? 'gold' : 'blue'}
+                        className="rounded-md"
+                      >
+                        {member.role === 'admin' ? 'Admin' : 'Member'}
                       </Tag>
-                    )}
-                  </div>
-                }
-                description={member.user?.email || member.user?.username}
-              />
-            </List.Item>
-          )}
+                      {isOwner && <Tag color="purple">Owner</Tag>}
+                    </div>
+                  }
+                  description={
+                    <span className="text-gray-500">
+                      {member.user?.email || member.user?.username}
+                    </span>
+                  }
+                />
+              </List.Item>
+            );
+          }}
           locale={{ emptyText: 'Tidak ada member' }}
         />
       </div>
-    </Modal>
+
+
+      {/* Edit Role Modal */}
+      <Modal
+        title="Edit Role Member"
+        open={editMemberModalOpen}
+        onOk={handleUpdateRole}
+        onCancel={() => setEditMemberModalOpen(false)}
+        okText="Simpan"
+        cancelText="Batal"
+      >
+        <div className="py-4">
+          <p className="mb-2">Pilih role untuk <strong>{editingMember?.user?.fullname}</strong>:</p>
+          <Select
+            value={newRole}
+            onChange={setNewRole}
+            style={{ width: '100%' }}
+            options={[
+              { value: 'member', label: 'Member' },
+              { value: 'admin', label: 'Admin' },
+            ]}
+          />
+        </div>
+      </Modal>
+    </Modal >
   );
 }
