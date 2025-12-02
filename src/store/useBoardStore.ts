@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import api from '../lib/api';
-import type { Board, BoardWithDetails, CreateBoardData, UpdateBoardData, AddMemberData, UpdateMemberRoleData, BoardMember } from '@/types/board';
+import type { Board, BoardWithDetails, CreateBoardData, UpdateBoardData, AddMemberData, UpdateMemberRoleData, BoardMember, SendBoardInvitationData, BoardInvitation } from '@/types/board';
 
 interface BoardState {
   boards: Board[];
@@ -16,6 +16,7 @@ interface BoardState {
   updateMemberRole: (boardId: number, memberId: number, data: UpdateMemberRoleData) => Promise<void>;
   removeMember: (boardId: number, memberId: number) => Promise<void>;
   getBoardMembers: (boardId: number) => Promise<BoardMember[]>;
+  sendInvitation: (boardId: number, data: SendBoardInvitationData) => Promise<BoardInvitation>;
   clearCurrentBoard: () => void;
 }
 
@@ -158,6 +159,18 @@ export const useBoardStore = create<BoardState>((set) => ({
     set({ loading: true, error: null });
     try {
       const response = await api.get(`/boards/${boardId}/members`);
+      set({ loading: false });
+      return response.data;
+    } catch (error: any) {
+      set({ error: error.response?.data?.error || error.message, loading: false });
+      throw error;
+    }
+  },
+
+  sendInvitation: async (boardId: number, data: SendBoardInvitationData) => {
+    set({ loading: true, error: null });
+    try {
+      const response = await api.post(`/boards/${boardId}/invite`, data);
       set({ loading: false });
       return response.data;
     } catch (error: any) {
