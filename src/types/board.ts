@@ -47,3 +47,40 @@ export interface AddMemberData {
 export interface UpdateMemberRoleData {
   role: 'admin' | 'member';
 }
+
+export interface BoardInvitation {
+  id_boardinvitation: number;
+  id_board: number;
+  inviter_id: number;
+  invitee_id?: number;
+  invitee_email: string;
+  role: 'admin' | 'member';
+  status: 'pending' | 'accepted' | 'declined';
+  created_at: string;
+  updated_at: string;
+  board?: Board & {
+    user?: {
+      id: number;
+      username: string;
+      fullname: string;
+    };
+  };
+  inviter?: {
+    id: number;
+    username: string;
+    fullname: string;
+    email: string;
+  };
+  invitee?: {
+    id: number;
+    username: string;
+    fullname: string;
+    email: string;
+  };
+}
+
+export interface SendBoardInvitationData {
+  invitee_id?: number;
+  invitee_email?: string;
+  role: 'admin' | 'member';
+}
