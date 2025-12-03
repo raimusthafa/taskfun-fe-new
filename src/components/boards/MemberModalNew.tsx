@@ -31,7 +31,7 @@ export default function MemberModal({ open, onClose, boardId, members, onMemberA
   const [searchResults, setSearchResults] = useState<UserSearchResult[]>([]);
   const [selectedUserId, setSelectedUserId] = useState<string | null>(null);
   const [selectedRole, setSelectedRole] = useState<'admin' | 'member'>('member');
-  const [searching, setSearching] = useState(false);
+  const [_searching, setSearching] = useState(false); // searching : not used yet
 
   // Edit Role State
   const [editMemberModalOpen, setEditMemberModalOpen] = useState(false);
