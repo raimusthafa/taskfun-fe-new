@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Modal, List, Avatar, Button, Select, message, Tag, Input, Spin } from 'antd';
-import { UserAddOutlined, DeleteOutlined, CrownOutlined, MailOutlined } from '@ant-design/icons';
+import { UserAddOutlined, CrownOutlined, MailOutlined } from '@ant-design/icons';
 import { useBoardStore } from '@/store/useBoardStore';
 import { useUserStore } from '@/store/useUserStore';
 import type { BoardMember } from '@/types/board';
