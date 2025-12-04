@@ -3,7 +3,7 @@ import { Modal, List, Avatar, Button, Tag, message, Empty, Spin } from 'antd';
 import { MailOutlined, CheckOutlined, CloseOutlined, CrownOutlined } from '@ant-design/icons';
 import { useBoardInvitationStore } from '@/store/useBoardInvitationStore';
 import { useBoardStore } from '@/store/useBoardStore';
-import { useNavigate } from 'react-router-dom';
+// import { useNavigate } from 'react-router-dom';
 
 interface BoardInvitationModalProps {
   open: boolean;
@@ -13,7 +13,7 @@ interface BoardInvitationModalProps {
 export default function BoardInvitationModal({ open, onClose }: BoardInvitationModalProps) {
   const { invitations, loading, fetchInvitations, acceptInvitation, declineInvitation } = useBoardInvitationStore();
   const { fetchBoards } = useBoardStore();
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
   useEffect(() => {
     if (open) {
