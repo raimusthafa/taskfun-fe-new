@@ -9,20 +9,16 @@ interface Category {
 interface CategoryState {
   categories: Category[];
   loading: boolean;
-  success: string | null;
   error: string | null;
   fetchCategories: () => Promise<void>;
   createCategory: (category: string) => Promise<void>;
   updateCategory: (id: number, updates: Partial<Category>) => Promise<void>;
   deleteCategory: (id: number) => Promise<void>;
-  setError: (msg: string | null) => void;
-  setSuccess: (msg: string | null) => void;
 }
 
 export const useCategoryStore = create<CategoryState>((set) => ({
   categories: [],
   loading: false,
-  success: null,
   error: null,
 
   fetchCategories: async () => {
@@ -38,23 +34,22 @@ export const useCategoryStore = create<CategoryState>((set) => ({
   createCategory: async (category) => {
     set({ loading: true, error: null });
     try {
-      console.log('POST /categories payload:', { category });
       const response = await api.post('/categories', { category });
       set((state) => ({
         categories: [...state.categories, response.data.category],
         loading: false,
-        success: response.data.message || "Category created successfully",
       }));
+      return response.data;
     } catch (error: any) {
+      const errorMsg = error.response?.data?.message || error.response?.data?.error || error.message;
       set({
-        error: error.response?.data?.message || error.message,
+        error: errorMsg,
         loading: false,
       });
+      throw error;
     }
   },
 
-
-  
   updateCategory: async (id, updates) => {
     set({ loading: true, error: null });
     try {
@@ -62,10 +57,12 @@ export const useCategoryStore = create<CategoryState>((set) => ({
       set((state) => ({
         categories: state.categories.map((cat) => (cat.id_category === id ? response.data : cat)),
         loading: false,
-        success: response.data.message || "Category edited successfully",
       }));
+      return response.data;
     } catch (error: any) {
-      set({ error: error.response?.data?.message || error.message, loading: false });
+      const errorMsg = error.response?.data?.message || error.response?.data?.error || error.message;
+      set({ error: errorMsg, loading: false });
+      throw error;
     }
   },
 
@@ -76,12 +73,11 @@ export const useCategoryStore = create<CategoryState>((set) => ({
       set((state) => ({
         categories: state.categories.filter((cat) => cat.id_category !== id),
         loading: false,
-        success: "Category deleted successfully",
       }));
     } catch (error: any) {
-      set({ error: error.response?.data?.message || error.message, loading: false });
+      const errorMsg = error.response?.data?.message || error.response?.data?.error || error.message;
+      set({ error: errorMsg, loading: false });
+      throw error;
     }
   },
-  setError: (msg) => set({ error: msg }),
-  setSuccess: (msg) => set({ success: msg }),
 }));

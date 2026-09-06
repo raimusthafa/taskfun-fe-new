@@ -1,10 +1,11 @@
 import { useEffect, useState } from 'react';
 import { useBoardStore } from '@/store/useBoardStore';
-import { Button, Card, Empty, Spin, message, Modal, Tag, Tooltip } from 'antd';
+import { Button, Card, Empty, Spin, Modal, Tag, Tooltip } from 'antd';
 import { PlusOutlined, EditOutlined, DeleteOutlined, TeamOutlined, EyeOutlined, LockOutlined, UnlockOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
 import BoardModal from '@/components/boards/BoardModal';
 import type { Board } from '@/types/board';
+import { toast } from '@/lib/toast';
 
 export default function Boards() {
   const navigate = useNavigate();
@@ -38,9 +39,9 @@ export default function Boards() {
       onOk: async () => {
         try {
           await deleteBoard(boardId);
-          message.success('Board berhasil dihapus');
-        } catch (error: any) {
-          message.error(error.response?.data?.error || 'Gagal menghapus board');
+          toast.success('Board berhasil dihapus');
+        } catch (error) {
+          toast.error(error, 'Gagal menghapus board');
         }
       },
     });

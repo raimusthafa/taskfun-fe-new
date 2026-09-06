@@ -22,4 +22,19 @@ api.interceptors.request.use((config) => {
   return config;
 });
 
+// Response interceptor untuk menangani unauthorized / token expired
+api.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.response?.status === 401) {
+      localStorage.removeItem('token');
+      const publicPaths = ['/login', '/register', '/'];
+      if (!publicPaths.includes(window.location.pathname)) {
+        window.location.href = '/login';
+      }
+    }
+    return Promise.reject(error);
+  }
+);
+
 export default api;

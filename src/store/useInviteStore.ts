@@ -27,9 +27,9 @@ const useInviteStore = create<InviteStore>((set) => ({
       const response = await api.get(`/tasks/${taskId}/invites`);
       set({ invites: response.data });
     } catch (error: any) {
-      const errorMessage = error.response?.data?.message || 'Gagal mengirim undangan';
+      const errorMessage = error.response?.data?.error || error.response?.data?.message || 'Gagal mengirim undangan';
       set({ error: errorMessage });
-      throw errorMessage;
+      throw error;
     } finally {
       set({ loading: false });
     }
@@ -41,9 +41,9 @@ const useInviteStore = create<InviteStore>((set) => ({
       const response = await api.get(`/tasks/${taskId}/invites`);
       set({ invites: response.data });
     } catch (error: any) {
-      const errorMessage = error.response?.data?.message || 'Gagal memuat daftar undangan';
+      const errorMessage = error.response?.data?.error || error.response?.data?.message || 'Gagal memuat daftar undangan';
       set({ error: errorMessage });
-      throw errorMessage;
+      throw error;
     } finally {
       set({ loading: false });
     }

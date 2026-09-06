@@ -1,9 +1,9 @@
 import { useEffect } from 'react';
-import { Modal, List, Avatar, Button, Tag, message, Empty, Spin } from 'antd';
+import { Modal, List, Avatar, Button, Tag, Empty, Spin } from 'antd';
 import { MailOutlined, CheckOutlined, CloseOutlined, CrownOutlined } from '@ant-design/icons';
 import { useBoardInvitationStore } from '@/store/useBoardInvitationStore';
 import { useBoardStore } from '@/store/useBoardStore';
-// import { useNavigate } from 'react-router-dom';
+import { toast } from '@/lib/toast';
 
 interface BoardInvitationModalProps {
   open: boolean;
@@ -13,7 +13,6 @@ interface BoardInvitationModalProps {
 export default function BoardInvitationModal({ open, onClose }: BoardInvitationModalProps) {
   const { invitations, loading, fetchInvitations, acceptInvitation, declineInvitation } = useBoardInvitationStore();
   const { fetchBoards } = useBoardStore();
-  // const navigate = useNavigate();
 
   useEffect(() => {
     if (open) {
@@ -24,21 +23,21 @@ export default function BoardInvitationModal({ open, onClose }: BoardInvitationM
   const handleAccept = async (invitationId: number) => {
     try {
       await acceptInvitation(invitationId);
-      message.success('Invitation diterima! Anda sekarang member board.');
+      toast.success('Invitation diterima! Anda sekarang member board.');
       await fetchBoards(); // Refresh boards list
     } catch (error: any) {
       console.error('Accept invitation error:', error);
-      message.error(error.response?.data?.error || 'Gagal menerima invitation');
+      toast.error(error, 'Gagal menerima invitation');
     }
   };
 
   const handleDecline = async (invitationId: number) => {
     try {
       await declineInvitation(invitationId);
-      message.success('Invitation ditolak');
+      toast.success('Invitation ditolak');
     } catch (error: any) {
       console.error('Decline invitation error:', error);
-      message.error(error.response?.data?.error || 'Gagal menolak invitation');
+      toast.error(error, 'Gagal menolak invitation');
     }
   };
 

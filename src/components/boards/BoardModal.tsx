@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
-import { Modal, Form, Input, Radio, message } from 'antd';
+import { Modal, Form, Input, Radio } from 'antd';
 import { useBoardStore } from '@/store/useBoardStore';
 import type { Board, CreateBoardData } from '@/types/board';
+import { toast } from '@/lib/toast';
 
 interface BoardModalProps {
   open: boolean;
@@ -33,10 +34,10 @@ export default function BoardModal({ open, onClose, board }: BoardModalProps) {
 
       if (board) {
         await updateBoard(board.id_board, values);
-        message.success('Board berhasil diupdate');
+        toast.success('Board berhasil diupdate');
       } else {
         await createBoard(values as CreateBoardData);
-        message.success('Board berhasil dibuat');
+        toast.success('Board berhasil dibuat');
       }
 
       form.resetFields();
@@ -45,7 +46,7 @@ export default function BoardModal({ open, onClose, board }: BoardModalProps) {
       if (error.errorFields) {
         return;
       }
-      message.error(error.response?.data?.error || 'Gagal menyimpan board');
+      toast.error(error, 'Gagal menyimpan board');
     } finally {
       setSubmitting(false);
     }

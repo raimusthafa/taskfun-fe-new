@@ -1,8 +1,9 @@
 import { useEffect } from 'react';
-import { Card, Button, Tag, Typography, Spin, Empty, message, Avatar } from 'antd';
+import { Card, Button, Tag, Typography, Spin, Empty, Avatar } from 'antd';
 import { TeamOutlined, CrownOutlined } from '@ant-design/icons';
 import { useBoardInvitationStore } from '@/store/useBoardInvitationStore';
 import { useBoardStore } from '@/store/useBoardStore';
+import { toast } from '@/lib/toast';
 
 const { Text } = Typography;
 
@@ -14,29 +15,31 @@ const BoardInviteComponent = () => {
     const loadInvitations = async () => {
       try {
         await fetchInvitations(); // Fetch all statuses
-      } catch (error: any) {
-        message.error('Gagal memuat daftar undangan board');
+      } catch (error) {
+        toast.error(error, 'Gagal memuat daftar undangan board');
       }
     };
     loadInvitations();
   }, [fetchInvitations]);
 
-  const handleAccept = async (invitationId: number, boardTitle: string) => {
+  const handleAccept = async (invitationId: number, boardTitle?: string) => {
     try {
       await acceptInvitation(invitationId);
       await fetchBoards(); // Refresh boards list
-      message.success(`Anda sekarang member dari "${boardTitle}"!`);
-    } catch (error: any) {
-      message.error(error.response?.data?.error || 'Gagal menerima undangan');
+      const title = boardTitle ? ` "${boardTitle}"` : '';
+      toast.success(`Anda sekarang member dari board${title}!`);
+    } catch (error) {
+      toast.error(error, 'Gagal menerima undangan');
     }
   };
 
-  const handleDecline = async (invitationId: number, boardTitle: string) => {
+  const handleDecline = async (invitationId: number, boardTitle?: string) => {
     try {
       await declineInvitation(invitationId);
-      message.info(`Undangan dari "${boardTitle}" ditolak`);
-    } catch (error: any) {
-      message.error(error.response?.data?.error || 'Gagal menolak undangan');
+      const title = boardTitle ? ` "${boardTitle}"` : '';
+      toast.info(`Undangan board${title} ditolak`);
+    } catch (error) {
+      toast.error(error, 'Gagal menolak undangan');
     }
   };
 

@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { Table, Tooltip, Modal, Input, Button, Space, message, Popconfirm } from 'antd';
-import { EditOutlined, DeleteOutlined, PlusOutlined, CheckCircleTwoTone, CloseCircleOutlined } from '@ant-design/icons';
+import { Table, Tooltip, Modal, Input, Button, Space, Popconfirm } from 'antd';
+import { EditOutlined, DeleteOutlined, PlusOutlined } from '@ant-design/icons';
 import { useCategoryStore } from '../store/useCategoryStore';
+import { toast } from '../lib/toast';
 
 interface Category {
   id_category: number;
@@ -9,54 +10,16 @@ interface Category {
 }
 
 const CategoryPage: React.FC = () => {
-  const { categories, fetchCategories, createCategory, updateCategory, deleteCategory, loading, error, success } = useCategoryStore();
+  const { categories, fetchCategories, createCategory, updateCategory, deleteCategory, loading } = useCategoryStore();
   const [isCreateModalVisible, setIsCreateModalVisible] = useState(false);
   const [isEditModalVisible, setIsEditModalVisible] = useState(false);
   const [editingCategory, setEditingCategory] = useState<Category | null>(null);
   const [createFormData, setCreateFormData] = useState({ category: '' });
   const [editFormData, setEditFormData] = useState({ category: '' });
-  const setSuccess = useCategoryStore((state) => state.setSuccess);
-  const setError = useCategoryStore((state) => state.setError);
 
   useEffect(() => {
     fetchCategories();
   }, [fetchCategories]);
-
-  useEffect(() => {
-    if (error) {
-      const key = 'create_error';
-      message.open({
-        key,
-        type: "error",
-        duration: 4,
-        icon: <CloseCircleOutlined twoToneColor="#52c41a" style={{ fontSize: "20px" }} />,
-        content: (
-          <div className="text-lg">
-            {error}
-          </div>
-        ),
-      });
-      setError(null);
-    }
-  }, [error]);
-
-  useEffect(() => {
-   if (success) {
-      const key = 'create_success';
-      message.open({
-        key,
-        type: "success",
-        duration: 4,
-        icon: <CheckCircleTwoTone twoToneColor="#52c41a" style={{ fontSize: "20px" }} />,
-        content: (
-          <div className="text-lg">
-            {success}
-          </div>
-        ),
-      });
-      setSuccess(null);
-    }
-  }, [success]);
 
   const showCreateModal = () => {
     setCreateFormData({ category: '' });
@@ -72,41 +35,43 @@ const CategoryPage: React.FC = () => {
   const handleDelete = async (id: number) => {
     try {
       await deleteCategory(id);
+      toast.success('Kategori berhasil dihapus');
       await fetchCategories();
-    } catch {
-      // Error handling is managed by the store and useEffect
+    } catch (err) {
+      toast.error(err, 'Gagal menghapus kategori');
     }
   };
 
-const handleCreateOk = async () => {
-  if (!createFormData.category.trim()) {
-    message.error('Category name is required');
-    return;
-  }
+  const handleCreateOk = async () => {
+    if (!createFormData.category.trim()) {
+      toast.warning('Nama kategori harus diisi');
+      return;
+    }
 
-  try {
-    await createCategory(createFormData.category);
-    await fetchCategories();
-    setIsCreateModalVisible(false);
-  } catch {
-    message.error('Failed to add category');
-  }
-};
-
+    try {
+      await createCategory(createFormData.category);
+      toast.success('Kategori berhasil ditambahkan');
+      await fetchCategories();
+      setIsCreateModalVisible(false);
+    } catch (err) {
+      toast.error(err, 'Gagal menambahkan kategori');
+    }
+  };
 
   const handleEditOk = async () => {
     if (!editFormData.category.trim()) {
-      message.error('Category name is required');
+      toast.warning('Nama kategori harus diisi');
       return;
     }
     try {
       if (editingCategory) {
         await updateCategory(editingCategory.id_category, { category: editFormData.category });
+        toast.success('Kategori berhasil diperbarui');
         await fetchCategories();
         setIsEditModalVisible(false);
       }
-    } catch {
-      message.error('Failed to update category');
+    } catch (err) {
+      toast.error(err, 'Gagal memperbarui kategori');
     }
   };
 
@@ -131,7 +96,7 @@ const handleCreateOk = async () => {
       title: 'No',
       key: 'no',
       width: '20%',
-      render: (_: any, __: Category, index: number) => index + 1,
+      render: (_: unknown, __: Category, index: number) => index + 1,
       sorter: (a: Category, b: Category) => a.id_category - b.id_category,
     },
     {
@@ -145,7 +110,7 @@ const handleCreateOk = async () => {
       title: 'Actions',
       key: 'actions',
       width: '20%',
-      render: (_: any, record: Category) => (
+      render: (_: unknown, record: Category) => (
         <Space size="middle">
           <Tooltip title="Edit">
             <Button

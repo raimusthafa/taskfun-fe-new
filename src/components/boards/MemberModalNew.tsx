@@ -1,11 +1,12 @@
 import { useState, useEffect, useCallback } from 'react';
-import { Modal, List, Avatar, Tag, Button, Select, message, Segmented, Tooltip, Popconfirm } from 'antd';
+import { Modal, List, Avatar, Tag, Button, Select, Segmented, Tooltip, Popconfirm } from 'antd';
 import { CrownOutlined, UserAddOutlined, MailOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons';
 import { useBoardStore } from '@/store/useBoardStore';
 import { useUserStore } from '@/store/useUserStore';
 import api from '@/lib/api';
 import debounce from 'lodash/debounce';
 import type { BoardMember } from '@/types/board';
+import { toast } from '@/lib/toast';
 
 interface MemberModalProps {
   open: boolean;
@@ -31,7 +32,7 @@ export default function MemberModal({ open, onClose, boardId, members, onMemberA
   const [searchResults, setSearchResults] = useState<UserSearchResult[]>([]);
   const [selectedUserId, setSelectedUserId] = useState<string | null>(null);
   const [selectedRole, setSelectedRole] = useState<'admin' | 'member'>('member');
-  const [_searching, setSearching] = useState(false); // searching : not used yet
+  const [searching, setSearching] = useState(false);
 
   // Edit Role State
   const [editMemberModalOpen, setEditMemberModalOpen] = useState(false);
@@ -62,7 +63,7 @@ export default function MemberModal({ open, onClose, boardId, members, onMemberA
       } catch (error) {
         console.error('Error searching users:', error);
         setSearchResults([]);
-        message.error('Gagal mencari user');
+        toast.error(error, 'Gagal mencari user');
       } finally {
         setSearching(false);
       }
@@ -87,13 +88,13 @@ export default function MemberModal({ open, onClose, boardId, members, onMemberA
 
   const handleSendInvitation = async () => {
     if (!selectedUserId) {
-      message.warning('Pilih user terlebih dahulu');
+      toast.warning('Pilih user terlebih dahulu');
       return;
     }
 
     const isAlreadyMember = members.some((member) => member.id_user === parseInt(selectedUserId));
     if (isAlreadyMember) {
-      message.warning('User sudah menjadi member board ini');
+      toast.warning('User sudah menjadi member board ini');
       return;
     }
 
@@ -103,7 +104,7 @@ export default function MemberModal({ open, onClose, boardId, members, onMemberA
 
     try {
       await sendInvitation(boardId, { invitee_id: parseInt(selectedUserId), role: selectedRole });
-      message.success(`Invitation berhasil dikirim ke ${userName} sebagai ${selectedRole === 'admin' ? 'Admin' : 'Member'}!`);
+      toast.success(`Invitation berhasil dikirim ke ${userName} sebagai ${selectedRole === 'admin' ? 'Admin' : 'Member'}!`);
       setSelectedUserId(null);
       setSearchInput('');
       setSearchResults([]);
@@ -113,25 +114,25 @@ export default function MemberModal({ open, onClose, boardId, members, onMemberA
         onMemberAdded();
       }
     } catch (error: any) {
-      message.error(error.response?.data?.error || 'Gagal mengirim invitation');
+      toast.error(error, 'Gagal mengirim invitation');
     }
   };
 
   const handleAddMember = async () => {
     if (!selectedUserId) {
-      message.warning('Pilih user terlebih dahulu');
+      toast.warning('Pilih user terlebih dahulu');
       return;
     }
 
     const isAlreadyMember = members.some((member) => member.id_user === parseInt(selectedUserId));
     if (isAlreadyMember) {
-      message.warning('User sudah menjadi member board ini');
+      toast.warning('User sudah menjadi member board ini');
       return;
     }
 
     try {
       await addMember(boardId, { id_user: parseInt(selectedUserId), role: selectedRole });
-      message.success('Member berhasil ditambahkan langsung');
+      toast.success('Member berhasil ditambahkan langsung');
       setSelectedUserId(null);
       setSearchInput('');
       setSearchResults([]);
@@ -141,7 +142,7 @@ export default function MemberModal({ open, onClose, boardId, members, onMemberA
         onMemberAdded();
       }
     } catch (error: any) {
-      message.error(error.response?.data?.error || 'Gagal menambahkan member');
+      toast.error(error, 'Gagal menambahkan member');
     }
   };
 
@@ -153,10 +154,10 @@ export default function MemberModal({ open, onClose, boardId, members, onMemberA
   const handleRemoveMember = async (memberId: number) => {
     try {
       await removeMember(boardId, memberId);
-      message.success('Member berhasil dihapus');
+      toast.success('Member berhasil dihapus');
       if (onMemberAdded) onMemberAdded();
     } catch (error: any) {
-      message.error(error.response?.data?.error || 'Gagal menghapus member');
+      toast.error(error, 'Gagal menghapus member');
     }
   };
 
@@ -170,12 +171,12 @@ export default function MemberModal({ open, onClose, boardId, members, onMemberA
     if (!editingMember) return;
     try {
       await updateMemberRole(boardId, editingMember.id_boardmember, { role: newRole });
-      message.success('Role member berhasil diupdate');
+      toast.success('Role member berhasil diupdate');
       setEditMemberModalOpen(false);
       setEditingMember(null);
       if (onMemberAdded) onMemberAdded();
     } catch (error: any) {
-      message.error(error.response?.data?.error || 'Gagal update role member');
+      toast.error(error, 'Gagal update role member');
     }
   };
 
@@ -240,6 +241,7 @@ export default function MemberModal({ open, onClose, boardId, members, onMemberA
                 <label className="block text-sm font-medium mb-1">Cari User (Username)</label>
                 <Select
                   showSearch
+                  loading={searching}
                   value={selectedUserId ? searchInput : undefined}
                   placeholder="Ketik minimal 3 karakter untuk mencari"
                   style={{ width: '100%' }}

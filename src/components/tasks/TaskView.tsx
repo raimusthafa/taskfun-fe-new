@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
 import { LayoutGridIcon, ListIcon, CalendarIcon } from 'lucide-react';
 import { TaskCard } from './TaskCard';
-import { Button, message } from 'antd';
+import { Button } from 'antd';
+import { toast } from '../../lib/toast';
 import TaskModal from '../ModalTask';
 import type { TaskCreateData } from '@/types/task';
 import { PlusOutlined } from '@ant-design/icons';
@@ -41,10 +42,10 @@ export function TaskView() {
       };
 
       await createTask(taskData);
-      message.success('Tugas berhasil ditambahkan!');
+      toast.success('Tugas berhasil ditambahkan!');
       setVisible(false);
     } catch (error) {
-      message.error('Gagal menambahkan tugas');
+      toast.error(error, 'Gagal menambahkan tugas');
     }
   };
 

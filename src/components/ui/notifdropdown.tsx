@@ -1,18 +1,18 @@
 import { CheckOutlined, CloseOutlined } from '@ant-design/icons';
-import { Badge, Dropdown, List, Button, Tabs, message } from 'antd';
+import { Badge, Dropdown, List, Button, Tabs } from 'antd';
 import type { MenuProps } from 'antd';
 import { BellIcon } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import useNotifikasiStore from '../../store/useNotifikasiStore';
-import useInviteStore from '../../store/useInviteStore';
 import { useBoardInvitationStore } from '../../store/useBoardInvitationStore';
 import { useBoardStore } from '../../store/useBoardStore';
+import { toast } from '@/lib/toast';
+import type { Invitation } from '@/types/invitation';
 
 const NotificationDropdown = () => {
   const [open, setOpen] = useState(false);
-  const { invites, listInvitesUser } = useNotifikasiStore();
-  const { acceptInvite, rejectInvite } = useInviteStore();
+  const { invites, listInvitesUser, acceptInvite, rejectInvite } = useNotifikasiStore();
   const { invitations: boardInvitations, fetchInvitations, acceptInvitation, declineInvitation } = useBoardInvitationStore();
   const { fetchBoards } = useBoardStore();
 
@@ -23,23 +23,40 @@ const NotificationDropdown = () => {
 
   useEffect(() => {
     if (open) {
+      listInvitesUser();
       fetchInvitations('pending');
     }
-  }, [open]);
+  }, [open, listInvitesUser]);
 
-  const handleAccept = async (inviteId: string, taskId: string) => {
+  const handleAccept = async (invite: Invitation) => {
+    const taskId = invite.task_id || invite.taskId || invite.task?.id;
+    if (!taskId) {
+      toast.error('Task ID tidak ditemukan');
+      return;
+    }
     try {
-      await acceptInvite(taskId, inviteId);
+      await acceptInvite(taskId, invite.id);
+      const taskTitle = invite.task?.tugas ? ` "${invite.task.tugas}"` : '';
+      toast.success(`Undangan tugas${taskTitle} berhasil diterima!`);
     } catch (error) {
       console.error('Failed to accept invite:', error);
+      toast.error(error, 'Gagal menerima undangan');
     }
   };
 
-  const handleReject = async (inviteId: string, taskId: string) => {
+  const handleReject = async (invite: Invitation) => {
+    const taskId = invite.task_id || invite.taskId || invite.task?.id;
+    if (!taskId) {
+      toast.error('Task ID tidak ditemukan');
+      return;
+    }
     try {
-      await rejectInvite(taskId, inviteId);
+      await rejectInvite(taskId, invite.id);
+      const taskTitle = invite.task?.tugas ? ` "${invite.task.tugas}"` : '';
+      toast.info(`Undangan tugas${taskTitle} ditolak`);
     } catch (error) {
       console.error('Failed to reject invite:', error);
+      toast.error(error, 'Gagal menolak undangan');
     }
   };
 
@@ -49,12 +66,14 @@ const NotificationDropdown = () => {
       await acceptInvitation(invitationId);
       await fetchBoards();
       await fetchInvitations('pending');
-      if (invitation?.board?.title) {
-        message.success(`Anda sekarang member dari "${invitation.board.title}"!`);
-      }
+      toast.success(
+        invitation?.board?.title
+          ? `Anda sekarang member dari "${invitation.board.title}"!`
+          : 'Undangan board berhasil diterima!'
+      );
     } catch (error) {
       console.error('Failed to accept board invitation:', error);
-      message.error('Gagal menerima invitation');
+      toast.error(error, 'Gagal menerima undangan board');
     }
   };
 
@@ -63,12 +82,14 @@ const NotificationDropdown = () => {
       const invitation = boardInvitations.find(inv => inv.id_boardinvitation === invitationId);
       await declineInvitation(invitationId);
       await fetchInvitations('pending');
-      if (invitation?.board?.title) {
-        message.info(`Invitation dari "${invitation.board.title}" ditolak`);
-      }
+      toast.info(
+        invitation?.board?.title
+          ? `Undangan board "${invitation.board.title}" ditolak`
+          : 'Undangan board ditolak'
+      );
     } catch (error) {
       console.error('Failed to decline board invitation:', error);
-      message.error('Gagal menolak invitation');
+      toast.error(error, 'Gagal menolak undangan board');
     }
   };
 
@@ -101,14 +122,14 @@ const NotificationDropdown = () => {
                               size="small"
                               type="link"
                               icon={<CheckOutlined />}
-                              onClick={() => handleAccept(invite.id, invite.taskId)}
+                              onClick={() => handleAccept(invite)}
                             />,
                             <Button
                               size="small"
                               type="link"
                               danger
                               icon={<CloseOutlined />}
-                              onClick={() => handleReject(invite.id, invite.taskId)}
+                              onClick={() => handleReject(invite)}
                             />,
                           ]}
                         >

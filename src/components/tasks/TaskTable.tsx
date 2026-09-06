@@ -2,10 +2,11 @@ import { useTaskStore } from '@/store/useTaskStore';
 import { CheckCircleIcon, ClockIcon, MoreVerticalIcon } from 'lucide-react';
 import { formatDate } from '@/lib/utils';
 import { Link } from 'react-router-dom';
-import { Dropdown, Modal, Space, message, Form, Input, DatePicker, Select, type MenuProps } from 'antd';
+import { Dropdown, Modal, Space, Form, Input, DatePicker, Select, type MenuProps } from 'antd';
 import { EditOutlined, DeleteOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
 import { useState } from 'react';
 import dayjs from 'dayjs';
+import { toast } from '@/lib/toast';
 
 import type { TaskFormData } from '@/types/task';
 
@@ -38,12 +39,12 @@ export function TaskTable() {
       };
 
       await updateTask(selectedTask, updatedTask);
-      message.success('Tugas berhasil diperbarui');
+      toast.success('Tugas berhasil diperbarui');
       setEditModalVisible(false);
       setSelectedTask(null);
       form.resetFields();
     } catch (error) {
-      message.error('Gagal memperbarui tugas');
+      toast.error(error, 'Gagal memperbarui tugas');
     }
   };
 
@@ -52,9 +53,9 @@ export function TaskTable() {
     
     try {
       await deleteTask(selectedTask);
-      message.success('Tugas berhasil dihapus');
+      toast.success('Tugas berhasil dihapus');
     } catch (error) {
-      message.error('Gagal menghapus tugas');
+      toast.error(error, 'Gagal menghapus tugas');
     } finally {
       setDeleteModalVisible(false);
       setSelectedTask(null);

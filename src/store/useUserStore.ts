@@ -17,15 +17,12 @@ interface UserState {
   token: string | null;
   loading: boolean;
   error: string | null;
-  success: string | null;
-  register: (username: string, fullname: string, email: string, password: string) => Promise<void>;
-  login: (identifier: string, password: string) => Promise<void>;
+  register: (username: string, fullname: string, email: string, password: string) => Promise<{ message?: string; [key: string]: unknown }>;
+  login: (identifier: string, password: string) => Promise<{ user?: User; token?: string; message?: string; [key: string]: unknown }>;
   logout: () => void;
   getProfile: () => Promise<void>;
   fetchUsers: () => Promise<void>;
   updateUser: (id: string, updates: Partial<UpdateUser>) => Promise<void>;
-  setError: (msg: string | null) => void;
-  setSuccess: (msg: string | null) => void;
 }
 
 export const useUserStore = create<UserState>((set) => ({
@@ -34,41 +31,40 @@ export const useUserStore = create<UserState>((set) => ({
   token: localStorage.getItem('token'),
   loading: false,
   error: null,
-  success: null,
 
-register: async (username, fullname, email, password) => {
-  set({ loading: true, error: null, success: null });
-  try {
-    const response = await api.post('/register', {
-      username,
-      fullname,
-      email,
-      password,
-    });
+  register: async (username, fullname, email, password) => {
+    set({ loading: true, error: null });
+    try {
+      const response = await api.post('/register', {
+        username,
+        fullname,
+        email,
+        password,
+      });
 
-    // ✅ Jangan set user/token karena backend tidak kirim itu saat register
-    set({
-      loading: false,
-      success: response.data.message || "Yeay! Registrasi berhasil 🎉",
-    });
-  } catch (error: any) {
-    set({
-      loading: false,
-      error: error.response?.data?.error || error.message,
-      success: null,
-    });
-  }
-},
-
+      set({ loading: false });
+      return response.data;
+    } catch (error: any) {
+      const errorMsg = error.response?.data?.error || error.response?.data?.message || error.message;
+      set({
+        loading: false,
+        error: errorMsg,
+      });
+      throw error;
+    }
+  },
 
   login: async (identifier, password) => {
-    set({ loading: true, error: null, success: null });
+    set({ loading: true, error: null });
     try {
       const response = await api.post('/login', { identifier, password });
-      set({ user: response.data.user, token: response.data.token, loading: false, success: response.data.message || "Login successful" });
+      set({ user: response.data.user, token: response.data.token, loading: false });
       localStorage.setItem('token', response.data.token);
+      return response.data;
     } catch (error: any) {
-      set({ error: error.response?.data?.error || error.message, loading: false, success: null });
+      const errorMsg = error.response?.data?.error || error.response?.data?.message || error.message;
+      set({ error: errorMsg, loading: false });
+      throw error;
     }
   },
 
@@ -97,8 +93,8 @@ register: async (username, fullname, email, password) => {
     }
   },
 
-    updateUser: async (id, updates) => {
-    set({ loading: true, error: null, success: null });
+  updateUser: async (id, updates) => {
+    set({ loading: true, error: null });
     try {
       const formData = new FormData();
       
@@ -117,20 +113,14 @@ register: async (username, fullname, email, password) => {
       set({
         user: response.data,
         loading: false,
-        success: response.data.message || "User updated successfully",
       });
     } catch (error: any) {
       const errorMsg = error.response?.data?.error || error.message || "Gagal update user";
       set({
         loading: false,
-        success: null,
         error: errorMsg,
       });
       throw error;
     }
   },
-
-
-    setError: (msg) => set({ error: msg }),
-  setSuccess: (msg) => set({ success: msg }),
 }));

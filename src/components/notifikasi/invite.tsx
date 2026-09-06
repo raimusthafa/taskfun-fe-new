@@ -1,41 +1,53 @@
 import { useEffect } from 'react';
-import { Card, Button, Tag, Typography, Spin, Empty, message, Avatar } from 'antd';
+import { Card, Button, Tag, Typography, Spin, Empty, Avatar } from 'antd';
 import { UserOutlined } from '@ant-design/icons';
 import useNotifikasiStore from '../../store/useNotifikasiStore';
-import useInviteStore from '@/store/useInviteStore';
+import { toast } from '@/lib/toast';
+import type { Invitation } from '@/types/invitation';
 
 const { Text } = Typography;
 
 const InviteComponent = () => {
-  const { invites, loading, listInvitesUser } = useNotifikasiStore();
-  const { acceptInvite, rejectInvite } = useInviteStore();
+  const { invites, loading, listInvitesUser, acceptInvite, rejectInvite } = useNotifikasiStore();
 
   useEffect(() => {
     const loadInvites = async () => {
       try {
         await listInvitesUser();
-      } catch (error: any) {
-        message.error(error || 'Gagal memuat daftar undangan');
+      } catch (error) {
+        toast.error(error, 'Gagal memuat daftar undangan');
       }
     };
     loadInvites();
   }, [listInvitesUser]);
 
-  const handleAccept = async (inviteId: string, taskId: string) => {
+  const handleAccept = async (invite: Invitation) => {
+    const taskId = invite.task_id || invite.taskId || invite.task?.id;
+    if (!taskId) {
+      toast.error('Task ID tidak ditemukan');
+      return;
+    }
     try {
-      await acceptInvite(taskId, inviteId);
-      message.success('Undangan diterima');
-    } catch (error: any) {
-      message.error(error || 'Gagal menerima undangan');
+      await acceptInvite(taskId, invite.id);
+      const taskTitle = invite.task?.tugas ? ` "${invite.task.tugas}"` : '';
+      toast.success(`Undangan tugas${taskTitle} berhasil diterima!`);
+    } catch (error) {
+      toast.error(error, 'Gagal menerima undangan');
     }
   };
 
-  const handleReject = async (inviteId: string, taskId: string) => {
+  const handleReject = async (invite: Invitation) => {
+    const taskId = invite.task_id || invite.taskId || invite.task?.id;
+    if (!taskId) {
+      toast.error('Task ID tidak ditemukan');
+      return;
+    }
     try {
-      await rejectInvite(taskId, inviteId);
-      message.success('Undangan ditolak');
-    } catch (error: any) {
-      message.error(error || 'Gagal menolak undangan');
+      await rejectInvite(taskId, invite.id);
+      const taskTitle = invite.task?.tugas ? ` "${invite.task.tugas}"` : '';
+      toast.info(`Undangan tugas${taskTitle} ditolak`);
+    } catch (error) {
+      toast.error(error, 'Gagal menolak undangan');
     }
   };
 
@@ -92,7 +104,7 @@ const InviteComponent = () => {
                     type="primary"
                     size="middle"
                     className="rounded-lg"
-                    onClick={() => handleAccept(invite.id, invite.taskId)}
+                    onClick={() => handleAccept(invite)}
                   >
                     Terima
                   </Button>
@@ -100,7 +112,7 @@ const InviteComponent = () => {
                     size="middle"
                     danger
                     className="rounded-lg"
-                    onClick={() => handleReject(invite.id, invite.taskId)}
+                    onClick={() => handleReject(invite)}
                   >
                     Tolak
                   </Button>

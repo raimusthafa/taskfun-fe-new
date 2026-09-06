@@ -1,9 +1,10 @@
 import { useState, useEffect } from 'react';
-import { Modal, List, Avatar, Button, Select, message, Tag, Input, Spin } from 'antd';
+import { Modal, List, Avatar, Button, Select, Tag, Input, Spin } from 'antd';
 import { UserAddOutlined, CrownOutlined, MailOutlined } from '@ant-design/icons';
 import { useBoardStore } from '@/store/useBoardStore';
 import { useUserStore } from '@/store/useUserStore';
 import type { BoardMember } from '@/types/board';
+import { toast } from '@/lib/toast';
 
 interface MemberModalProps {
   open: boolean;
@@ -38,13 +39,13 @@ export default function MemberModal({ open, onClose, boardId, members, onMemberA
 
   const handleSendInvitation = async () => {
     if (!selectedUserId) {
-      message.warning('Pilih user terlebih dahulu');
+      toast.warning('Pilih user terlebih dahulu');
       return;
     }
 
     try {
       await sendInvitation(boardId, { invitee_id: selectedUserId, role: selectedRole });
-      message.success('Invitation berhasil dikirim!');
+      toast.success('Invitation berhasil dikirim!');
       setSelectedUserId(null);
       setSelectedRole('member');
       if (onMemberAdded) {
@@ -52,22 +53,20 @@ export default function MemberModal({ open, onClose, boardId, members, onMemberA
       }
     } catch (error: any) {
       console.error('Send invitation error:', error);
-      message.error(error.response?.data?.error || 'Gagal mengirim invitation');
+      toast.error(error, 'Gagal mengirim invitation');
     }
   };
-
-
 
   const handleUpdateRole = async (memberId: number, newRole: 'admin' | 'member') => {
     try {
       await updateMemberRole(boardId, memberId, { role: newRole });
-      message.success('Role member berhasil diupdate');
+      toast.success('Role member berhasil diupdate');
       if (onMemberAdded) {
         onMemberAdded();
       }
     } catch (error: any) {
       console.error('Update role error:', error);
-      message.error(error.response?.data?.error || 'Gagal mengupdate role');
+      toast.error(error, 'Gagal mengupdate role');
     }
   };
 

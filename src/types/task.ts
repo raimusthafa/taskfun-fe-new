@@ -7,6 +7,25 @@ export interface Task {
   id_user: number;
   id_category: number;
   status: 'todo' | 'in_progress' | 'done';
+  user?: {
+    id: number;
+    id_user?: string;
+    username: string;
+    fullname: string;
+    email: string;
+    profilepic?: string;
+  };
+  category?: {
+    id_category: number;
+    category: string;
+  };
+  collaborators?: Array<{
+    id: number;
+    username: string;
+    fullname: string;
+    email: string;
+    profilepic?: string;
+  }>;
 }
 
 import type { Dayjs } from 'dayjs';

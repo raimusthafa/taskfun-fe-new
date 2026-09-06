@@ -1,9 +1,10 @@
 import { useState } from 'react';
-import { Modal, Form, Input, Select, DatePicker, message } from 'antd';
+import { Modal, Form, Input, Select, DatePicker } from 'antd';
 import { useTaskStore } from '@/store/useTaskStore';
 import { useCategoryStore } from '@/store/useCategoryStore';
 import dayjs from 'dayjs';
 import { useEffect } from 'react';
+import { toast } from '@/lib/toast';
 
 interface TaskBoardModalProps {
   open: boolean;
@@ -40,7 +41,7 @@ export default function TaskBoardModal({ open, onClose, boardId, onSuccess }: Ta
       };
 
       await createTask(taskData);
-      message.success('Task berhasil ditambahkan ke board');
+      toast.success('Task berhasil ditambahkan ke board');
       form.resetFields();
       onClose();
       if (onSuccess) {
@@ -50,7 +51,7 @@ export default function TaskBoardModal({ open, onClose, boardId, onSuccess }: Ta
       if (error.errorFields) {
         return;
       }
-      message.error(error.response?.data?.error || 'Gagal menambahkan task');
+      toast.error(error, 'Gagal menambahkan task');
     } finally {
       setSubmitting(false);
     }

@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
-import { List, Tag, Space, Empty, Spin, message } from 'antd';
+import { List, Tag, Empty, Spin } from 'antd';
 import useInviteStore from '../../store/useInviteStore';
+import { toast } from '@/lib/toast';
 
 interface InviteListProps {
   taskId: string;
@@ -27,84 +28,75 @@ const InviteList = ({ taskId }: InviteListProps) => {
       try {
         await listInvites(taskId);
       } catch (error: any) {
-        message.error(error || 'Gagal memuat daftar undangan');
+        // Jika 403 (bukan owner), abaikan secara senyap tanpa menampilkan toast error
+        if (error?.response?.status === 403 || error?.status === 403) {
+          return;
+        }
+        toast.error(error, 'Gagal memuat daftar undangan');
       }
     };
     loadInvites();
   }, [taskId, listInvites]);
 
   if (loading) {
-    return <Spin size="large" tip="Memuat..." />;
+    return (
+      <div className="flex justify-center py-6">
+        <Spin size="default" tip="Memuat daftar undangan..." />
+      </div>
+    );
   }
 
   if (invites.length === 0) {
     return (
       <div>
-        <h3 style={{ fontSize: 16, fontWeight: 500, marginBottom: 16 }}>
-          Daftar Kolaborator
+        <h3 className="text-base font-semibold text-gray-900 mb-4">
+          Daftar Undangan Kolaborator
         </h3>
-        <Empty description="Belum ada undangan" />
+        <div className="py-6 bg-gray-50 rounded-xl border border-gray-100 text-center">
+          <Empty description={<span className="text-gray-500 text-sm">Belum ada undangan kolaborator</span>} />
+        </div>
       </div>
     );
   }
 
-  // const handleAccept = async (inviteId: string) => {
-  //   try {
-  //     await acceptInvite(taskId, inviteId);
-  //     message.success('Undangan diterima');
-  //   } catch (error: any) {
-  //     message.error(error || 'Gagal menerima undangan');
-  //   }
-  // };
-
-  // const handleReject = async (inviteId: string) => {
-  //   try {
-  //     await rejectInvite(taskId, inviteId);
-  //     message.success('Undangan ditolak');
-  //   } catch (error: any) {
-  //     message.error(error || 'Gagal menolak undangan');
-  //   }
-  // };
-
   return (
     <div>
-      <h3 style={{ fontSize: 16, fontWeight: 500}}>
-        Daftar Kolaborator
+      <h3 className="text-base font-semibold text-gray-900 mb-4">
+        Daftar Undangan Kolaborator
       </h3>
-      <List
-        dataSource={invites}
-        renderItem={(invite) => (
-          <List.Item
-            key={invite.id}
-          >
-            <List.Item.Meta
-                            title={
-                <div>
-                  <div style={{ fontWeight: 500 }}>{invite.invitee_email || '-'}</div>
-                  {/* <div style={{ fontSize: 13, color: '#888' }}>{invite.inviteeUsername ? `@${invite.inviteeUsername}` : ''}</div> */}
-                  {/* <div style={{ fontSize: 13 }}>{invite.inviteeEmail}</div> */}
-                </div>
-              }
-              description={
-                <Space>
-                  Status:{' '}
-                  <Tag
-                    color={
-                      invite.status === 'pending'
-                        ? 'gold'
-                        : invite.status === 'accepted'
-                        ? 'green'
-                        : 'red'
-                    }
-                  >
-                    {getStatusText(invite.status)}
-                  </Tag>
-                </Space>
-              }
-            />
-          </List.Item>
-        )}
-      />
+      <div className="bg-white rounded-xl border border-gray-100 divide-y divide-gray-100 overflow-hidden shadow-sm">
+        <List
+          dataSource={invites}
+          renderItem={(invite) => (
+            <List.Item key={invite.id} className="!px-5 !py-3.5 hover:bg-gray-50/60 transition-colors">
+              <List.Item.Meta
+                title={
+                  <div className="flex items-center justify-between">
+                    <span className="font-medium text-gray-900 text-sm">{invite.invitee_email || '-'}</span>
+                    <Tag
+                      className="rounded-full px-2.5 py-0.5 text-xs font-semibold"
+                      color={
+                        invite.status === 'pending'
+                          ? 'gold'
+                          : invite.status === 'accepted'
+                          ? 'green'
+                          : 'red'
+                      }
+                    >
+                      {getStatusText(invite.status)}
+                    </Tag>
+                  </div>
+                }
+                description={
+                  <span className="text-xs text-gray-400">
+                    Undangan kolaborasi tugas
+                  </span>
+                }
+              />
+            </List.Item>
+          )}
+        />
+      </div>
     </div>
   );
 };

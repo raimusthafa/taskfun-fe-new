@@ -1,11 +1,19 @@
-import React from 'react';
+import { useEffect, useState } from 'react';
 import { Sidebar } from './Sidebar';
 import { Header } from './Header';
 import { Outlet } from 'react-router-dom';
+import { useUserStore } from '../store/useUserStore';
 
 export function Layout() {
-  const [sidebarOpen, setSidebarOpen] = React.useState(false);
-  const [isDesktopOpen, setIsDesktopOpen] = React.useState(true);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [isDesktopOpen, setIsDesktopOpen] = useState(true);
+  const { user, getProfile } = useUserStore();
+
+  useEffect(() => {
+    if (!user && localStorage.getItem('token')) {
+      getProfile().catch(() => {});
+    }
+  }, [user, getProfile]);
 
   return (
     <div className="flex h-screen w-full bg-gray-50">

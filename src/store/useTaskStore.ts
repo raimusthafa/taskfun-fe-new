@@ -34,27 +34,26 @@ export const useTaskStore = create<TaskState>((set) => ({
     }
   },
 
-createTask: async (taskData) => {
-  set({ loading: true, error: null });
+  createTask: async (taskData) => {
+    set({ loading: true, error: null });
 
-  try {
-    // log data sebelum dikirim
-    // console.log('📤 Data yang dikirim ke API:', taskData); 
+    try {
+      const response = await api.post('/tasks', taskData);
 
-    const response = await api.post('/tasks', taskData);
-
-    set((state) => ({
-      tasks: [...state.tasks, response.data],
-      loading: false
-    }));
-  } catch (error: any) {
-    set({
-      error: error.response?.data?.message || error.message,
-      loading: false
-    });
-  }
-},
-
+      set((state) => ({
+        tasks: [...state.tasks, response.data],
+        loading: false
+      }));
+      return response.data;
+    } catch (error: any) {
+      const errorMsg = error.response?.data?.message || error.response?.data?.error || error.message;
+      set({
+        error: errorMsg,
+        loading: false
+      });
+      throw error;
+    }
+  },
 
   updateTask: async (id, updates) => {
     set({ loading: true, error: null });
@@ -64,8 +63,11 @@ createTask: async (taskData) => {
         tasks: state.tasks.map((task) => (task.id === id ? response.data : task)),
         loading: false,
       }));
+      return response.data;
     } catch (error: any) {
-      set({ error: error.response?.data?.message || error.message, loading: false });
+      const errorMsg = error.response?.data?.message || error.response?.data?.error || error.message;
+      set({ error: errorMsg, loading: false });
+      throw error;
     }
   },
 
@@ -78,7 +80,9 @@ createTask: async (taskData) => {
         loading: false,
       }));
     } catch (error: any) {
-      set({ error: error.response?.data?.message || error.message, loading: false });
+      const errorMsg = error.response?.data?.message || error.response?.data?.error || error.message;
+      set({ error: errorMsg, loading: false });
+      throw error;
     }
   },
 

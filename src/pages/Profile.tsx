@@ -2,10 +2,10 @@ import { motion } from 'framer-motion';
 import { useUserStore } from '../store/useUserStore';
 import { useState, useEffect } from 'react';
 import { Camera, Edit2, Save, X } from 'lucide-react';
-import { message } from 'antd';
+import { toast } from '../lib/toast';
 
 const Profile = () => {
-  const { user, loading, error, updateUser, getProfile } = useUserStore();
+  const { user, loading, updateUser, getProfile } = useUserStore();
   const [isEditing, setIsEditing] = useState(false);
   const [profileData, setProfileData] = useState({
     fullname: user?.fullname || '',
@@ -38,7 +38,7 @@ const Profile = () => {
     if (!user) return;
 
     try {
-      const updates: any = {
+      const updates: Record<string, unknown> = {
         fullname: profileData.fullname,
         email: profileData.email,
         username: profileData.username,
@@ -49,19 +49,13 @@ const Profile = () => {
       }
 
       await updateUser(user.id_user || String(user.id), updates);
-      
-      if (error) {
-        message.error(error);
-        return;
-      }
-      
       await getProfile();
-      message.success('Profile berhasil diupdate!');
+      toast.success('Profile berhasil diupdate!');
       setIsEditing(false);
       setSelectedFile(null);
       setPreviewUrl(null);
-    } catch (err: any) {
-      message.error(err.response?.data?.error || error || 'Gagal update profile');
+    } catch (err) {
+      toast.error(err, 'Gagal update profile');
     }
   };
 
